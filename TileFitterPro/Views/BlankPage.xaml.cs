@@ -6,11 +6,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace TileFitterPro.Views
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class BlankPage : Page
     {
-        public MainViewModel ViewModel { get; } = new MainViewModel();
+        public BlankViewModel ViewModel { get; } = new BlankViewModel();
 
-        public MainPage()
+        public BlankPage()
         {
             InitializeComponent();
         }

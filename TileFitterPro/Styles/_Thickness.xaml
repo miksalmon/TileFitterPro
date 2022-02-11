@@ -7,7 +7,7 @@
 
     <!--Medium size margins-->
     <Thickness x:Key="MediumLeftMargin">24,0,0,0</Thickness>
-    <Thickness x:Key="MediumLeftRightMargin">68,24,24,68</Thickness>
+    <Thickness x:Key="MediumLeftRightMargin">24,0,24,0</Thickness>
     <Thickness x:Key="MediumLeftTopRightBottomMargin">24,24,24,24</Thickness>
     <Thickness x:Key="MediumTopMargin">0,24,0,0</Thickness>
     <Thickness x:Key="MediumTopBottomMargin">0,24,0,24</Thickness>

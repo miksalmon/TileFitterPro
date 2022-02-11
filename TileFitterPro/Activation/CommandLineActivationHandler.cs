@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using TileFitterPro.Services;
@@ -8,14 +6,10 @@ using TileFitterPro.Views;
 
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using CommandLine;
-using Microsoft.Toolkit.Mvvm.Input;
 using TileFitter.Models;
-using TileFitter.Services;
-using TileFitterPro.Helpers;
 
 namespace TileFitterPro.Activation
 {
@@ -33,29 +27,9 @@ namespace TileFitterPro.Activation
             // This is typically not the install location of the app itself, but could be any arbitrary path.
             string activationPath = operation.CurrentDirectoryPath;
 
-
             var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(commandLineArgs) as Parsed<CommandLineArguments>).Value;
 
-            try
-            {
-                var reader = new TileReader();
-                var tiles = reader.ReadTilesAsync(Path.GetFullPath(Path.Combine(activationPath, arguments.InputSetFilePath)));
-                NavigationService.Navigate(typeof(MainPage), tiles);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                await Launcher.LaunchUriAsync(new Uri("ms-settings:appsfeatures-app"));
-
-                var dialog = new ContentDialog
-                {
-                    Title = "File System Access Denied",
-                    Content = "Please make sure to enable TileFitterPro App permissions for file system access. The app will now close.",
-                    SecondaryButtonText = "Ok",
-                    SecondaryButtonCommand = new RelayCommand(() => CoreApplication.Exit())
-                };
-
-                await dialog.ShowAsync();
-            }
+            NavigationService.Navigate(typeof(MainPage), commandLineArgs);
 
             await Task.CompletedTask;
         }

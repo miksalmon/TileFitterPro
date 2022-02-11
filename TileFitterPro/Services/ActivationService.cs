@@ -63,7 +63,7 @@ namespace TileFitterPro.Services
 
         private async Task InitializeAsync()
         {
-            await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
+            await Task.CompletedTask;
         }
 
         private async Task HandleActivationAsync(object activationArgs)
@@ -88,7 +88,7 @@ namespace TileFitterPro.Services
 
         private async Task StartupAsync()
         {
-            await ThemeSelectorService.SetRequestedThemeAsync();
+            await Task.CompletedTask;
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()

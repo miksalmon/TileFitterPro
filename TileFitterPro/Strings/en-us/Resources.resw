@@ -133,28 +133,4 @@
     <value>Blank</value>
     <comment>Navigation view item name for Blank</comment>
   </data>
-  <data name="Settings_Theme.Text" xml:space="preserve">
-    <value>Choose Theme</value>
-    <comment>Choose theme text for Settings</comment>
-  </data>
-  <data name="Settings_Theme_Dark.Content" xml:space="preserve">
-    <value>Dark</value>
-    <comment>Dark theme text for Settings</comment>
-  </data>
-  <data name="Settings_Theme_Default.Content" xml:space="preserve">
-    <value>Windows default</value>
-    <comment>Windows default theme text for Settings</comment>
-  </data>
-  <data name="Settings_Theme_Light.Content" xml:space="preserve">
-    <value>Light</value>
-    <comment>Light theme text for Settings</comment>
-  </data>
-  <data name="Settings_About.Text" xml:space="preserve">    
-    <value>About this application</value>
-    <comment>About this application title for Settings</comment>
-  </data>
-  <data name="Settings_Personalization.Text" xml:space="preserve">   
-    <value>Personalization</value>
-    <comment>Personalization text for Settings</comment>
-  </data>
 </root>

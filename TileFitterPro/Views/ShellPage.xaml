@@ -9,7 +9,6 @@
     xmlns:helpers="using:TileFitterPro.Helpers"
     xmlns:views="using:TileFitterPro.Views"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-    winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
 
@@ -19,35 +18,13 @@
         </ic:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <Grid>
-        <Border x:Name="AppTitleBar"
-                IsHitTestVisible="True"
-                VerticalAlignment="Top"
-                Background="Transparent"
-                Height="40"
-                Canvas.ZIndex="1" 
-                Margin="48,8,0,0">
-            <StackPanel Orientation="Horizontal">
-                <Image x:Name="AppFontIcon"
-                       HorizontalAlignment="Left" 
-                       VerticalAlignment="Center"
-                       Source="Assets/Square44x44Logo.png" 
-                       Width="16" 
-                       Height="16"/>
-                <TextBlock x:Name="AppTitle"
-                           Text="TileFitterPro"
-                           VerticalAlignment="Center"
-                           Margin="12, 0, 0, 0"
-                           Style="{StaticResource CaptionTextBlockStyle}" />
-            </StackPanel>
-        </Border>
-
-<winui:NavigationView
+    <winui:NavigationView
         x:Name="navigationView"
         IsBackButtonVisible="Visible"
         IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
         SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
-        IsSettingsVisible="True">
+        IsSettingsVisible="False"
+        Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.MenuItems>
             <!--
             TODO WTS: Change the symbols for each item as appropriate for your app
@@ -56,6 +33,7 @@
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
             <winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
+            <winui:NavigationViewItem x:Uid="Shell_Blank" Icon="Document" helpers:NavHelper.NavigateTo="views:BlankPage" />
         </winui:NavigationView.MenuItems>
         <i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior
@@ -79,6 +57,4 @@
             <Frame x:Name="shellFrame" />
         </Grid>
     </winui:NavigationView>
-
-        </Grid>
 </Page>

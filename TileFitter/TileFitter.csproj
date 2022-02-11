@@ -132,6 +132,7 @@
     <Compile Include="Services\ContainerManager.cs" />
     <Compile Include="Services\OutputWriter.cs" />
     <Compile Include="Services\TileReader.cs" />
+    <EmbeddedResource Include="Properties\TileFitterLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser">

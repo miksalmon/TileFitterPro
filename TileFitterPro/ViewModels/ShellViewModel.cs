@@ -9,7 +9,6 @@ using Microsoft.Toolkit.Mvvm.Input;
 
 using TileFitterPro.Helpers;
 using TileFitterPro.Services;
-using TileFitterPro.Views;
 
 using Windows.System;
 using Windows.UI.Xaml.Controls;
@@ -75,7 +74,7 @@ namespace TileFitterPro.ViewModels
         {
             if (args.IsSettingsInvoked)
             {
-                NavigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
+                // Navigate to the settings page - implement as appropriate if needed
             }
             else
             {
@@ -102,12 +101,6 @@ namespace TileFitterPro.ViewModels
         private void Frame_Navigated(object sender, NavigationEventArgs e)
         {
             IsBackEnabled = NavigationService.CanGoBack;
-            if (e.SourcePageType == typeof(SettingsPage))
-            {
-                Selected = _navigationView.SettingsItem as WinUI.NavigationViewItem;
-                return;
-            }
-
             var selectedItem = GetSelectedItem(_navigationView.MenuItems, e.SourcePageType);
             if (selectedItem != null)
             {
