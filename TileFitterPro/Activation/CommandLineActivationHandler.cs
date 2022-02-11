@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using TileFitterPro.Services;
@@ -6,10 +8,12 @@ using TileFitterPro.Views;
 
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Xaml;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
 using CommandLine;
+using Microsoft.Toolkit.Mvvm.Input;
 using TileFitter.Models;
+using TileFitter.Services;
 
 namespace TileFitterPro.Activation
 {
@@ -18,18 +22,32 @@ namespace TileFitterPro.Activation
         // Learn more about these EventArgs at https://docs.microsoft.com/en-us/uwp/api/windows.applicationmodel.activation.commandlineactivatedeventargs
         protected override async Task HandleInternalAsync(CommandLineActivatedEventArgs args)
         {
-            CommandLineActivationOperation operation = args.Operation;
+            try
+            {
+                CommandLineActivationOperation operation = args.Operation;
+                var commandLineArgs = operation.Arguments.Split(' ');
+                string activationPath = operation.CurrentDirectoryPath;
+                var parsedArguments = (Parser.Default.ParseArguments<CommandLineArguments>(commandLineArgs) as Parsed<CommandLineArguments>).Value;
 
-            // Because these are supplied by the caller, they should be treated as untrustworthy.
-            var commandLineArgs = operation.Arguments.Split(' ');
+                var reader = new TileReader();
+                var tiles = await reader.ReadTilesAsync(Path.Combine(activationPath, parsedArguments.InputSetFilePath));
+                NavigationService.Navigate(typeof(MainPage), tiles);
 
-            // The directory where the command-line activation request was made.
-            // This is typically not the install location of the app itself, but could be any arbitrary path.
-            string activationPath = operation.CurrentDirectoryPath;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                await Launcher.LaunchUriAsync(new Uri("ms-settings:appsfeatures-app"));
 
-            var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(commandLineArgs) as Parsed<CommandLineArguments>).Value;
+                var dialog = new ContentDialog
+                {
+                    Title = "File System Access Denied",
+                    Content = "Please make sure to enable TileFitterPro App permissions for file system access. The app will now close.",
+                    SecondaryButtonText = "Ok",
+                    SecondaryButtonCommand = new RelayCommand(() => CoreApplication.Exit())
+                };
 
-            NavigationService.Navigate(typeof(MainPage), commandLineArgs);
+                await dialog.ShowAsync();
+            }
 
             await Task.CompletedTask;
         }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TileFitter.Models;
 using TileFitter.Services;
 using TileFitter.Algorithms;
+using Windows.ApplicationModel.Core;
 
 namespace TileFitterProConsole
 {
@@ -29,11 +30,19 @@ namespace TileFitterProConsole
 
                 Console.WriteLine(container.PlacedTiles);
             }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"File system access denied. Please make sure to enable TileFitterPro App permissions for file system access.");
+                Console.ReadLine();
+                CoreApplication.Exit();
+
+            }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Unexpected error: {ex.Message}. Press any key to exit the app.");
+                Console.ReadLine();
+                CoreApplication.Exit();
             }
-            
         }
     }
 }
