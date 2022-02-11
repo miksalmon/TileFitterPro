@@ -2,6 +2,6 @@
 {
     internal interface IOutputWriter
     {
-        public void WriteOutput(string filePath);
+        void WriteOutput(string filePath);
     }
 }

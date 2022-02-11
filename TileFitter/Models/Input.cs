@@ -6,8 +6,8 @@ namespace TileFitter.Models
 {
     public class Input
     {
-        public IEnumerable<Rectangle> Rectangles { get; init; }
+        public IEnumerable<Rectangle> Rectangles { get; set; }
 
-        public Rectangle Container { get; init; }
+        public Rectangle Container { get; set; }
     }
 }

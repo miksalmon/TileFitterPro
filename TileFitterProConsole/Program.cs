@@ -1,6 +1,5 @@
 ﻿using CommandLine;
 using System;
-using System.IO;
 using TileFitter.Models;
 using TileFitter.Services;
 
@@ -14,8 +13,6 @@ namespace TileFitterProConsole
             var reader = new TileReader();
 
             var tiles = reader.ReadTiles(arguments.InputSetFilePath);
-
-            Console.ReadLine();
         }
     }
 }

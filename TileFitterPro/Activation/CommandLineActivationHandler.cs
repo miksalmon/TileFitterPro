@@ -8,6 +8,8 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommandLine;
+using TileFitter.Models;
 
 namespace TileFitterPro.Activation
 {
@@ -19,24 +21,15 @@ namespace TileFitterPro.Activation
             CommandLineActivationOperation operation = args.Operation;
 
             // Because these are supplied by the caller, they should be treated as untrustworthy.
-            string cmdLineString = operation.Arguments;
+            var commandLineArgs = operation.Arguments.Split(' ');
 
             // The directory where the command-line activation request was made.
             // This is typically not the install location of the app itself, but could be any arbitrary path.
             string activationPath = operation.CurrentDirectoryPath;
 
-            //// TODO WTS: parse the cmdLineString to determine what to do.
-            //// If doing anything async, get a deferral first.
-            //// using (var deferral = operation.GetDeferral())
-            //// {
-            ////     await ParseCmdString(cmdLineString, activationPath);
-            //// }
-            ////
-            //// If the arguments warrant showing a different view on launch, that can be done here.
-            //// NavigationService.Navigate(typeof(CmdLineActivationSamplePage), cmdLineString);
-            //// If you do nothing, the app will launch like normal.
+            var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(commandLineArgs) as Parsed<CommandLineArguments>).Value;
 
-            NavigationService.Navigate(typeof(MainPage), cmdLineString);
+            NavigationService.Navigate(typeof(MainPage), commandLineArgs);
 
             await Task.CompletedTask;
         }

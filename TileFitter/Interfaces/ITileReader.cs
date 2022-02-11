@@ -6,6 +6,6 @@ namespace TileFitter.Interfaces
 {
     public interface ITileReader
     {
-        public IEnumerable<Rectangle> ReadTiles(string filePath);
+        IEnumerable<Rectangle> ReadTiles(string filePath);
     }
 }

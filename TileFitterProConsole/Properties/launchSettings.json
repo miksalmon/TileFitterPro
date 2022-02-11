@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "TileFitterProConsole": {
-      "commandName": "Project",
-      "commandLineArgs": "--InputSet .\\Sample_InputSet1_6x6.csv --ContainerWidth 6 --ContainerHeight 6 --Output .\\output.txt ",
-      "workingDirectory": "E:\\repos\\perso\\TileFitterProConsole"
-    }
-  }
-}
