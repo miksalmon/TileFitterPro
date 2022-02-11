@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using TileFitterPro.Activation;
-using TileFitterPro.Core.Helpers;
+using TileFitterPro.Helpers;
 
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;

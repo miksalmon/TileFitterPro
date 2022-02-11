@@ -141,6 +141,7 @@
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
+    <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
     <Compile Include="Services\NavigationService.cs" />
@@ -236,10 +237,6 @@
     <ProjectReference Include="..\TileFitterLibrary\TileFitter.csproj">
       <Project>{16C82B9F-ED4A-4104-8593-0D8582B6ADC3}</Project>
       <Name>TileFitter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TileFitterPro.Core\TileFitterPro.Core.csproj">
-      <Project>{155BF55B-2C83-4A4D-AD6E-097F1521962D}</Project>
-      <Name>TileFitterPro.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
