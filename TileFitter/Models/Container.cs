@@ -4,8 +4,17 @@ using System.Drawing;
 
 namespace TileFitter.Models
 {
-    internal class Container
+    public class Container
     {
-        IEnumerable<Rectangle> PlacedTiles { get; }
+        public IList<Rectangle> PlacedTiles { get; } = new List<Rectangle>();
+
+        public int Width { get; set; }
+
+        public int Height { get; set; }
+
+        public void AddPlacedTile(Rectangle tile)
+        {
+            PlacedTiles.Add(tile);
+        }
     }
 }

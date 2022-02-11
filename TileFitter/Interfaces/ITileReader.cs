@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace TileFitter.Interfaces
 {
     public interface ITileReader
     {
-        IEnumerable<Rectangle> ReadTiles(string filePath);
+        Task<IEnumerable<Rectangle>> ReadTilesAsync(string filePath);
     }
 }
