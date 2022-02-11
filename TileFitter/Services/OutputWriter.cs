@@ -1,6 +1,12 @@
-﻿namespace TileFitter.Services
+﻿using TileFitter.Interfaces;
+
+namespace TileFitter.Services
 {
-    internal class OutputWriter : IOutputOutputWriter
+    internal class OutputWriter : IOutputWriter
     {
+        public void WriteOutput(string filePath)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
