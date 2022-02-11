@@ -3,6 +3,7 @@
 using TileFitterPro.ViewModels;
 
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace TileFitterPro.Views
 {
@@ -13,6 +14,10 @@ namespace TileFitterPro.Views
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
         }
     }
 }

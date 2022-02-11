@@ -132,7 +132,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TileFitterLibrary\TileFitter.csproj">
+    <ProjectReference Include="..\TileFitter\TileFitter.csproj">
       <Project>{16c82b9f-ed4a-4104-8593-0d8582b6adc3}</Project>
       <Name>TileFitter</Name>
     </ProjectReference>
