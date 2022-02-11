@@ -35,7 +35,7 @@ namespace TileFitterPro.Services
             {
                 // Initialize services that you need before app activation
                 // take into account that the splash screen is shown while this code runs.
-                await InitializeAsync();
+                Initialize();
 
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active
@@ -61,9 +61,9 @@ namespace TileFitterPro.Services
             }
         }
 
-        private async Task InitializeAsync()
+        private void Initialize()
         {
-            await Task.CompletedTask;
+            ThemeSelectorService.Initialize();
         }
 
         private async Task HandleActivationAsync(object activationArgs)
@@ -88,7 +88,7 @@ namespace TileFitterPro.Services
 
         private async Task StartupAsync()
         {
-            await Task.CompletedTask;
+            await ThemeSelectorService.SetRequestedThemeAsync();
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
