@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileFitterPro", "TileFitterPro\TileFitterPro.csproj", "{CFCAEF7E-F6D5-4616-BF9F-756436B73C0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileFitter", "TileFitterLibrary\TileFitter.csproj", "{16C82B9F-ED4A-4104-8593-0D8582B6ADC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileFitter", "TileFitter\TileFitter.csproj", "{16C82B9F-ED4A-4104-8593-0D8582B6ADC3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileFitterProConsole", "TileFitterProConsole\TileFitterProConsole.csproj", "{77289ADD-F7BF-4989-B970-117B4AB4241F}"
 EndProject
