@@ -18,8 +18,8 @@ namespace TileFitter.Services
             var folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
-            var resultString = container.GetPlacedTilesString();
-
+            var resultString = "width,height,top,left\n"+container.GetPlacedTilesString();
+            
             await FileIO.WriteTextAsync(file, resultString);
         }
     }

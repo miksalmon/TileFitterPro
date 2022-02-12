@@ -25,6 +25,8 @@ namespace TileFitterProConsole
 
                 var result = runner.FindFastestSolution(container);
 
+                var solutions = await runner.FindAllSolutionsAsync(container);
+
                 if(result.IsValidSolution)
                 {
                     var writer = new ContainerWriter();

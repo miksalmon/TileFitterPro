@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TileFitter.Extensions;
 
 namespace TileFitter.Models
 {
@@ -30,7 +31,7 @@ namespace TileFitter.Models
 
         public bool IsValidSolution => ValidateSolution();
 
-        public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToString()));
+        public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToOutputFormat()));
 
         public bool ValidateSolution()
         {

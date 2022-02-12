@@ -69,13 +69,12 @@ namespace TileFitter.Services
                 if (result.IsValidSolution)
                 {
                     solution = result;
+                    cts.Cancel();
                 }
                 else if(result.RemainingTiles.Count < bestInvalidSolution.RemainingTiles.Count)
                 {
                     bestInvalidSolution = result;
                 }
-
-                cts.Cancel();
             }).Wait();
 
             return solution ?? bestInvalidSolution;
