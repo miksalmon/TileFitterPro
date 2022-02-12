@@ -11,13 +11,13 @@ using TileFitter.Models;
 
 namespace TileFitter.Algorithms
 {
-    public class MaximalRectangleTileFitter
+    public class MaximalRectanglesTileFitter
     {
         private Container Container { get; set; }
 
         private List<Rectangle> FreeRectangles { get; set; } = new List<Rectangle>();
 
-        public MaximalRectangleTileFitter()
+        public MaximalRectanglesTileFitter()
         {
         }
 
