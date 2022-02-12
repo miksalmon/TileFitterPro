@@ -19,12 +19,10 @@ namespace TileFitterProConsole
                 var reader = new TileReader();
 
                 var tiles = (await reader.ReadTilesAsync(arguments.InputSetFilePath)).ToList();
-
-                var tileFitter = new MaximalRectanglesTileFitter();
-
                 var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
-                container = tileFitter.FitTiles(container, MaximalRectanglesTileFitter.FreeRectangleChoiceHeuristic.BestShortSideFit);
+                var runner = new TileFitterRunner();
+                var result = runner.Run(container, new TileFitterOptions(Algorithm.MaximalRectangles, Heuristic.BestShortSideFit));
 
                 // TODO: output to output file
 

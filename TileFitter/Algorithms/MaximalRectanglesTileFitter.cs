@@ -12,7 +12,7 @@ using TileFitter.Extensions;
 
 namespace TileFitter.Algorithms
 {
-    public class MaximalRectanglesTileFitter
+    internal class MaximalRectanglesTileFitter
     {
         private Container Container { get; set; }
 
@@ -30,7 +30,7 @@ namespace TileFitter.Algorithms
             FreeRectangles.Add(new Rectangle(0, 0, Container.Width, Container.Height));
         }
 
-        public Container FitTiles(Container container, FreeRectangleChoiceHeuristic heuristic)
+        public Container FitTiles(Container container, MaximalRectanglesHeuristic heuristic)
         {
             if (container.RemainingTiles is null || container is null)
             {
@@ -73,7 +73,7 @@ namespace TileFitter.Algorithms
             Container.PlacedTiles.Add(tilePlacement.PlacedTile);
         }
 
-        private TilePlacement FindBestTileToPlace(FreeRectangleChoiceHeuristic heuristic)
+        private TilePlacement FindBestTileToPlace(MaximalRectanglesHeuristic heuristic)
         {
             TilePlacement bestTilePlacement = new TilePlacement(Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, new HeuristicMetrics(int.MaxValue, int.MaxValue));
             foreach (var tile in Container.RemainingTiles)
@@ -91,19 +91,19 @@ namespace TileFitter.Algorithms
             return bestTilePlacement;
         }
 
-        private TilePlacement FindTilePlacement(Rectangle tile, FreeRectangleChoiceHeuristic heuristic)
+        private TilePlacement FindTilePlacement(Rectangle tile, MaximalRectanglesHeuristic heuristic)
         {
             switch (heuristic)
             {
-                case FreeRectangleChoiceHeuristic.ContactPointRule:
+                case MaximalRectanglesHeuristic.ContactPointRule:
                     throw new NotImplementedException();
-                case FreeRectangleChoiceHeuristic.BottomLeftRule:
+                case MaximalRectanglesHeuristic.BottomLeftRule:
                     return FindTilePlacementBottomLeftRule(tile);
-                case FreeRectangleChoiceHeuristic.BestAreaFit:
+                case MaximalRectanglesHeuristic.BestAreaFit:
                     return FindTilePlacementBestAreaFit(tile);
-                case FreeRectangleChoiceHeuristic.BestLongSideFit:
+                case MaximalRectanglesHeuristic.BestLongSideFit:
                     return FindTilePlacementBestLongSideFit(tile);
-                case FreeRectangleChoiceHeuristic.BestShortSideFit:
+                case MaximalRectanglesHeuristic.BestShortSideFit:
                 default:
                     return FindTilePlacementBestShortSideFit(tile);
             }
@@ -380,15 +380,15 @@ namespace TileFitter.Algorithms
             return new HeuristicMetrics(shortSideDiff, longSideDiff);
         }
 
-        public enum FreeRectangleChoiceHeuristic
-        {
-            BestShortSideFit,
-            BestLongSideFit,
-            BestAreaFit,
-            BottomLeftRule,
-            ContactPointRule
-        };
-
         #endregion
     }
+
+    public enum MaximalRectanglesHeuristic
+    {
+        BestShortSideFit,
+        BestLongSideFit,
+        BestAreaFit,
+        BottomLeftRule,
+        ContactPointRule
+    };
 }
