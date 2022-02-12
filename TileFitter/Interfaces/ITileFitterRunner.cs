@@ -10,11 +10,13 @@ namespace TileFitter.Interfaces
 {
     internal interface ITileFitterRunner
     {
-        Container RunAll(Container container);
+        Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container);
 
-        Container Run(Container container, TileFitterOptions options);
+        Container FindFastestSolution(Container container);
 
-        Container RunMaximalRectangles(Container container, TileFitterOptions options);
+        Container FindSolution(Container container, TileFitterOptions options);
+
+        Container RunMaximalRectangles(Container container, Heuristic heuristic);
 
         MaximalRectanglesHeuristic GetMaximalRectanglesHeuristic(Heuristic heurtic);
     }

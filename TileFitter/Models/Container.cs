@@ -11,9 +11,12 @@ namespace TileFitter.Models
         {
             Width = width;
             Height = height;
+            ContainerRectangle = new Rectangle(0, 0, width, height);
             RemainingTiles = tiles.Select(x => x).ToList();
-            ;
         }
+
+        // TODO: rename
+        public Rectangle ContainerRectangle { get; }
 
         public List<Rectangle> RemainingTiles { get; } = new List<Rectangle>();
 
@@ -25,8 +28,40 @@ namespace TileFitter.Models
 
         public int Area => Width * Height;
 
-        public bool IsFilled => !RemainingTiles.Any();
+        public bool IsValidSolution => ValidateSolution();
 
         public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToString()));
+
+        public bool ValidateSolution()
+        {
+            if(RemainingTiles.Any())
+            {
+                return false;
+            }    
+
+            foreach(var tile in PlacedTiles)
+            {
+                if(!ContainerRectangle.Contains(tile))
+                {
+                    return false;
+                }
+
+                if(PlacedTiles.Where(x => x != tile).Any(otherTile => tile.IntersectsWith(otherTile)))
+                {
+                    return false;
+                }
+            }    
+
+            return true;
+        }
+
+        public Container Clone()
+        {
+            var newContainer = new Container(Width, Height, new List<Rectangle>());
+            newContainer.RemainingTiles.AddRange(RemainingTiles);
+            newContainer.PlacedTiles.AddRange(PlacedTiles);
+
+            return newContainer;
+        }
     }
 }

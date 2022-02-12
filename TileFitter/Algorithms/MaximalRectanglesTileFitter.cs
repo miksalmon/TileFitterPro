@@ -24,7 +24,7 @@ namespace TileFitter.Algorithms
 
         public void Initialize(Container container)
         {
-            Container = container;
+            Container = container.Clone();
             Container.PlacedTiles.Clear();
             FreeRectangles.Clear();
             FreeRectangles.Add(new Rectangle(0, 0, Container.Width, Container.Height));
