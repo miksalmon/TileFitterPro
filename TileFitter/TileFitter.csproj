@@ -120,8 +120,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\MaximalRectangleTileFitter.cs" />
-    <Compile Include="Algorithms\MaxRectsBinPack.cs" />
+    <Compile Include="Algorithms\MaximalRectanglesTileFitter.cs" />
+    <Compile Include="Extensions\RectangleExtensions.cs" />
     <Compile Include="Interfaces\IOutputWriter.cs" />
     <Compile Include="Interfaces\ITileReader.cs" />
     <Compile Include="Models\CommandLineArguments.cs" />
