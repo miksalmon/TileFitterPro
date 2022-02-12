@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TileFitter.Models;
 using TileFitter.Services;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using System.Linq;
 using System.IO;
 
@@ -18,7 +19,11 @@ namespace TileFitterProConsole
                 var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(args) as Parsed<CommandLineArguments>).Value;
                 var reader = new TileReader();
 
-                var tiles = (await reader.ReadTilesAsync(arguments.InputSetFilePath)).ToList();
+                var fullPath = Path.GetFullPath(arguments.InputSetFilePath);
+                var file = await StorageFile.GetFileFromPathAsync(fullPath);
+
+                var tiles = (await reader.ReadTilesAsync(file)).ToList();
+
                 var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
                 var runner = new TileFitterRunner();

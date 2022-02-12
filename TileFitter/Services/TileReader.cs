@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TileFitter.Interfaces;
+using TileFitter.Models;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 
@@ -12,12 +13,9 @@ namespace TileFitter.Services
 {
     public class TileReader : ITileReader
     {
-        public async Task<IEnumerable<Rectangle>> ReadTilesAsync(string filePath)
+        public async Task<IEnumerable<Rectangle>> ReadTilesAsync(StorageFile file)
         {
             var tiles = new List<Rectangle>();
-
-            var fullPath = Path.GetFullPath(filePath);
-            var file = await StorageFile.GetFileFromPathAsync(fullPath);
 
             var lines = await FileIO.ReadLinesAsync(file);
 

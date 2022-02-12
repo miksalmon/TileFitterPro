@@ -2,16 +2,82 @@
     x:Class="TileFitterPro.Views.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid>
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.
-            -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <Grid VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Bottom"
+                        Command="{x:Bind ViewModel.RunCommand, Mode=OneWay}"
+                        Content="Run"
+                        IsEnabled="{x:Bind ViewModel.CanRunCommand(ViewModel.Container, ViewModel.TilesToPlace), Mode=OneWay}"
+                        Style="{StaticResource AccentButtonStyle}" />
+                    <Button
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Bottom"
+                        Command="{x:Bind ViewModel.ImportCommand, Mode=OneWay}"
+                        Content="Open input file" />
+                    <ComboBox
+                        x:Name="WidthComboBox"
+                        Width="100"
+                        Margin="0,0,12,0"
+                        Header="Width"
+                        IsEditable="True"
+                        ItemsSource="{x:Bind ViewModel.Sizes}"
+                        SelectedItem="{x:Bind ViewModel.Container.Width, Mode=OneWay}"
+                        SelectionChanged="WidthComboBox_SelectionChanged"
+                        TextSubmitted="WidthComboBox_TextSubmitted" />
+                    <ComboBox
+                        x:Name="HeightComboBox"
+                        Width="100"
+                        Margin="0,0,12,0"
+                        Header="Height"
+                        IsEditable="True"
+                        ItemsSource="{x:Bind ViewModel.Sizes}"
+                        SelectedItem="{x:Bind ViewModel.Container.Height, Mode=OneWay}"
+                        SelectionChanged="HeightComboBox_SelectionChanged"
+                        TextSubmitted="HeightComboBox_TextSubmitted" />
+                </StackPanel>
+                <TextBlock Text="{x:Bind ViewModel.CurrentFile.Path, Mode=OneWay}" />
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="CanvasContainer" Grid.Row="1">
+            <canvas:CanvasControl
+                x:Name="CanvasElement"
+                ClearColor="Transparent"
+                Draw="Canvas_Draw"
+                SizeChanged="Canvas_SizeChanged" />
+        </Grid>
+
+        <Grid x:Name="ResultContainer" Grid.Row="2">
+            <muxc:InfoBar
+                Title="Success"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                IsOpen="{x:Bind NonNullable(ViewModel.Result), Mode=OneWay}"
+                Message="{x:Bind ViewModel.ResultMessage, Mode=OneWay}"
+                Severity="Success" />
+
+            <muxc:InfoBar
+                Title="Failure"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                IsOpen="{x:Bind Invert(ViewModel.Result), Mode=OneWay}"
+                Message="{x:Bind ViewModel.ResultMessage, Mode=OneWay}"
+                Severity="Error" />
+
         </Grid>
     </Grid>
 </Page>
