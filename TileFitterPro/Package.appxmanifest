@@ -10,14 +10,14 @@
 
   <Identity
     Name="2990018D-6279-4280-A5C4-7000985F6935"
-    Publisher="CN=misalmo"
+    Publisher="CN=miksalmon"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="2990018D-6279-4280-A5C4-7000985F6935" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>TileFitterPro</DisplayName>
-    <PublisherDisplayName>misalmo</PublisherDisplayName>
+    <PublisherDisplayName>Michael Salmon</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -40,7 +40,7 @@
         Description="ms-resource:AppDescription"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png"/>
       </uap:VisualElements>
 
       <Extensions>
