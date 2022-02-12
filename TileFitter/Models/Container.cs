@@ -25,7 +25,7 @@ namespace TileFitter.Models
 
         public int Area => Width * Height;
 
-        public bool IsFilled => RemainingTiles.Any();
+        public bool IsFilled => !RemainingTiles.Any();
 
         public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToString()));
     }
