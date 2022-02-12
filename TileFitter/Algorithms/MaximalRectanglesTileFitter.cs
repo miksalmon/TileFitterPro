@@ -44,15 +44,16 @@ namespace TileFitter.Algorithms
             {
                 var bestTilePlacement = FindBestTileToPlace(heuristic);
 
+                // Cannot fit tile
                 if (bestTilePlacement.PlacedTile == Rectangle.Empty)
                 {
-                    throw new Exception("Cannot fit all tiles.");
+                    return Container;
                 }
 
                 PlaceTile(bestTilePlacement);
             }
 
-            return container;
+            return Container;
         }
 
         #region Tile Placement
