@@ -5,6 +5,7 @@ using TileFitter.Models;
 using TileFitter.Services;
 using TileFitter.Algorithms;
 using Windows.ApplicationModel.Core;
+using System.Linq;
 
 namespace TileFitterProConsole
 {
@@ -17,7 +18,7 @@ namespace TileFitterProConsole
                 var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(args) as Parsed<CommandLineArguments>).Value;
                 var reader = new TileReader();
 
-                var tiles = await reader.ReadTilesAsync(arguments.InputSetFilePath);
+                var tiles = (await reader.ReadTilesAsync(arguments.InputSetFilePath)).ToList();
 
                 var tileFitter = new MaximalRectangleTileFitter();
 
@@ -26,9 +27,10 @@ namespace TileFitterProConsole
                     Width = arguments.ContainerWidth,
                     Height = arguments.ContainerHeight
                 };
-                container = tileFitter.PlaceTiles(container, tiles, MaximalRectangleHeuristic.BestShortSideFit);
+                container = tileFitter.FitTiles(container, tiles, MaximalRectangleTileFitter.FreeRectangleChoiceHeuristic.BestShortSideFit);
 
                 Console.WriteLine(container.PlacedTiles);
+                Console.ReadLine();
             }
             catch (UnauthorizedAccessException)
             {
