@@ -7,6 +7,14 @@ namespace TileFitter.Models
 {
     public class Container
     {
+        public Container(int width, int height, List<Rectangle> tiles)
+        {
+            Width = width;
+            Height = height;
+            RemainingTiles = tiles.Select(x => x).ToList();
+            ;
+        }
+
         public List<Rectangle> RemainingTiles { get; } = new List<Rectangle>();
 
         public List<Rectangle> PlacedTiles { get; } = new List<Rectangle>();

@@ -22,14 +22,12 @@ namespace TileFitterProConsole
 
                 var tileFitter = new MaximalRectangleTileFitter();
 
-                var container = new Container()
-                {
-                    Width = arguments.ContainerWidth,
-                    Height = arguments.ContainerHeight
-                };
-                container = tileFitter.FitTiles(container, tiles, MaximalRectangleTileFitter.FreeRectangleChoiceHeuristic.BestShortSideFit);
+                var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
-                Console.WriteLine(container.PlacedTiles);
+                container = tileFitter.FitTiles(container, MaximalRectangleTileFitter.FreeRectangleChoiceHeuristic.BestShortSideFit);
+
+                // TODO: output to output file
+
                 Console.ReadLine();
             }
             catch (UnauthorizedAccessException)

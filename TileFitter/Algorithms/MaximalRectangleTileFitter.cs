@@ -15,8 +15,6 @@ namespace TileFitter.Algorithms
     {
         private Container Container { get; set; }
 
-        private List<Rectangle> TilesToPlace { get; } = new List<Rectangle>();
-
         private List<Rectangle> FreeRectangles { get; set; } = new List<Rectangle>();
 
         public MaximalRectangleTileFitter()
@@ -31,74 +29,17 @@ namespace TileFitter.Algorithms
             FreeRectangles.Add(new Rectangle(0, 0, Container.Width, Container.Height));
         }
 
-        private List<Rectangle> RecalculateFreeRectangles(Rectangle placedTile)
-        {
-            var freeRectangles = new List<Rectangle>();
-            foreach (var freeRectangle in FreeRectangles)
-            {
-                if (placedTile.IntersectsWith(freeRectangle))
-                {
-                    var overlap = Rectangle.Intersect(placedTile, freeRectangle);
-                    var newFreeRectangles = PruneOverlap(freeRectangle, overlap);
-                    freeRectangles.AddRange(newFreeRectangles);
-                }
-                else
-                {
-                    freeRectangles.Add(freeRectangle);
-                }
-            }
-
-            return freeRectangles;
-        }
-
-        private List<Rectangle> PruneOverlap(Rectangle freeRectangle, Rectangle overlap)
-        {
-            var newFreeRectangles = new List<Rectangle>();
-            // new free rectangle on the left
-            if (overlap.Left > freeRectangle.Left)
-            {
-                var newFreeRectangle = new Rectangle(freeRectangle.Left, freeRectangle.Top, overlap.Left - freeRectangle.Left, freeRectangle.Height);
-                newFreeRectangles.Add(newFreeRectangle);
-            }
-
-            // new free rectangle on the right
-            if (overlap.Right < freeRectangle.Right)
-            {
-                var newFreeRectangle = new Rectangle(overlap.Right, freeRectangle.Top, freeRectangle.Right - overlap.Right, freeRectangle.Height);
-                newFreeRectangles.Add(newFreeRectangle);
-            }
-
-            // new free rectangle on the top
-            // overlap.Top < freeRectangle.Bottom ????
-            if (overlap.Top > freeRectangle.Top)
-            {
-                var newFreeRectangle = new Rectangle(freeRectangle.Left, freeRectangle.Top, freeRectangle.Width, overlap.Top - freeRectangle.Top);
-                newFreeRectangles.Add(newFreeRectangle);
-            }
-
-            // new free rectangle on the bottom
-            if (overlap.Bottom < freeRectangle.Bottom)
-            {
-                var newFreeRectangle = new Rectangle(freeRectangle.Left, overlap.Bottom, freeRectangle.Width, freeRectangle.Bottom - overlap.Bottom);
-                newFreeRectangles.Add(newFreeRectangle);
-            }
-
-            return newFreeRectangles;
-        }
-
         public Container FitTiles(Container container, FreeRectangleChoiceHeuristic heuristic)
         {
-            if (Container.RemainingTiles is null || container is null)
+            if (container.RemainingTiles is null || container is null)
             {
                 throw new ArgumentNullException(nameof(Container.RemainingTiles));
             }
 
-            TilesToPlace.AddRange(Container.RemainingTiles.Select(x => x).ToList());
-
             Initialize(container);
 
             // while there are tiles to fit
-            while (TilesToPlace.Count > 0)
+            while (Container.RemainingTiles.Count > 0)
             {
                 var bestTilePlacement = FindBestTileToPlace(heuristic);
 
@@ -113,6 +54,8 @@ namespace TileFitter.Algorithms
             return container;
         }
 
+        #region Tile Placement
+
         private void PlaceTile(TilePlacement tilePlacement)
         {
             var splitMaximals = CalculateMaximalFreeRectangles(tilePlacement.FreeRectangle, tilePlacement.PlacedTile);
@@ -125,9 +68,41 @@ namespace TileFitter.Algorithms
 
             RemoveRedundantFreeRectangles();
 
-            TilesToPlace.Remove(tilePlacement.InitialTile);
+            Container.RemainingTiles.Remove(tilePlacement.InitialTile);
             Container.PlacedTiles.Add(tilePlacement.PlacedTile);
         }
+
+        private TilePlacement FindBestTileToPlace(FreeRectangleChoiceHeuristic heuristic)
+        {
+            TilePlacement bestTilePlacement = new TilePlacement(Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, new HeuristicMetrics(int.MaxValue, int.MaxValue));
+            foreach (var tile in Container.RemainingTiles)
+            {
+                var tilePlacement = FindTilePlacement(tile, heuristic);
+
+                if (tilePlacement.Metrics.PrimaryMetric < bestTilePlacement.Metrics.PrimaryMetric ||
+                    (tilePlacement.Metrics.PrimaryMetric == bestTilePlacement.Metrics.PrimaryMetric &&
+                     tilePlacement.Metrics.SecondaryMetric < bestTilePlacement.Metrics.SecondaryMetric))
+                {
+                    bestTilePlacement = tilePlacement;
+                }
+            }
+
+            return bestTilePlacement;
+        }
+
+        private TilePlacement FindTilePlacement(Rectangle tile, FreeRectangleChoiceHeuristic heuristic)
+        {
+            switch (heuristic)
+            {
+                case FreeRectangleChoiceHeuristic.BestShortSideFit:
+                default:
+                    return FindTilePlacementBestShortSideFit(tile);
+            }
+        }
+
+        #endregion
+
+        #region Free Rectangles Management
 
         private List<Rectangle> CalculateMaximalFreeRectangles(Rectangle freeRectangle, Rectangle placedTile)
         {
@@ -176,33 +151,87 @@ namespace TileFitter.Algorithms
             return maximalFreeRectangles;
         }
 
-        private TilePlacement FindBestTileToPlace(FreeRectangleChoiceHeuristic heuristic)
+        private void RemoveRedundantFreeRectangles()
         {
-            TilePlacement bestTilePlacement = new TilePlacement(Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, new HeuristicMetrics(int.MaxValue, int.MaxValue));
-            foreach (var tile in TilesToPlace)
+            /// Go through each pair and remove any rectangle that is redundant.
+            for (int i = 0; i < FreeRectangles.Count; ++i)
             {
-                var tilePlacement = FindTilePlacement(tile, heuristic);
-
-                if (tilePlacement.Metrics.PrimaryMetric < bestTilePlacement.Metrics.PrimaryMetric ||
-                    (tilePlacement.Metrics.PrimaryMetric == bestTilePlacement.Metrics.PrimaryMetric &&
-                     tilePlacement.Metrics.SecondaryMetric < bestTilePlacement.Metrics.SecondaryMetric))
+                var freeRectangle = FreeRectangles[i];
+                for (int j = i + 1; j < FreeRectangles.Count; ++j)
                 {
-                    bestTilePlacement = tilePlacement;
+                    var otherFreeRectangle = FreeRectangles[j];
+
+                    if (otherFreeRectangle.Contains(freeRectangle))
+                    {
+                        FreeRectangles.RemoveAt(i--);
+                        break;
+                    }
+                    if (freeRectangle.Contains(otherFreeRectangle))
+                    {
+                        FreeRectangles.RemoveAt(j--);
+                    }
+                }
+            }
+        }
+
+        private List<Rectangle> PruneOverlap(Rectangle freeRectangle, Rectangle overlap)
+        {
+            var newFreeRectangles = new List<Rectangle>();
+            // new free rectangle on the left
+            if (overlap.Left > freeRectangle.Left)
+            {
+                var newFreeRectangle = new Rectangle(freeRectangle.Left, freeRectangle.Top, overlap.Left - freeRectangle.Left, freeRectangle.Height);
+                newFreeRectangles.Add(newFreeRectangle);
+            }
+
+            // new free rectangle on the right
+            if (overlap.Right < freeRectangle.Right)
+            {
+                var newFreeRectangle = new Rectangle(overlap.Right, freeRectangle.Top, freeRectangle.Right - overlap.Right, freeRectangle.Height);
+                newFreeRectangles.Add(newFreeRectangle);
+            }
+
+            // new free rectangle on the top
+            // overlap.Top < freeRectangle.Bottom ????
+            if (overlap.Top > freeRectangle.Top)
+            {
+                var newFreeRectangle = new Rectangle(freeRectangle.Left, freeRectangle.Top, freeRectangle.Width, overlap.Top - freeRectangle.Top);
+                newFreeRectangles.Add(newFreeRectangle);
+            }
+
+            // new free rectangle on the bottom
+            if (overlap.Bottom < freeRectangle.Bottom)
+            {
+                var newFreeRectangle = new Rectangle(freeRectangle.Left, overlap.Bottom, freeRectangle.Width, freeRectangle.Bottom - overlap.Bottom);
+                newFreeRectangles.Add(newFreeRectangle);
+            }
+
+            return newFreeRectangles;
+        }
+
+        private List<Rectangle> RecalculateFreeRectangles(Rectangle placedTile)
+        {
+            var freeRectangles = new List<Rectangle>();
+            foreach (var freeRectangle in FreeRectangles)
+            {
+                if (placedTile.IntersectsWith(freeRectangle))
+                {
+                    var overlap = Rectangle.Intersect(placedTile, freeRectangle);
+                    var newFreeRectangles = PruneOverlap(freeRectangle, overlap);
+                    freeRectangles.AddRange(newFreeRectangles);
+                }
+                else
+                {
+                    freeRectangles.Add(freeRectangle);
                 }
             }
 
-            return bestTilePlacement;
+            return freeRectangles;
         }
 
-        private TilePlacement FindTilePlacement(Rectangle tile, FreeRectangleChoiceHeuristic heuristic)
-        {
-            switch (heuristic)
-            {
-                case FreeRectangleChoiceHeuristic.BestShortSideFit:
-                default:
-                    return FindTilePlacementBestShortSideFit(tile);
-            }
-        }
+        #endregion
+
+        #region Heuristics
 
         private TilePlacement FindTilePlacementBestShortSideFit(Rectangle tile)
         {
@@ -238,33 +267,11 @@ namespace TileFitter.Algorithms
             return new HeuristicMetrics(shortSideDiff, longSideDiff);
         }
 
-        private void RemoveRedundantFreeRectangles()
-        {
-            /// Go through each pair and remove any rectangle that is redundant.
-            for (int i = 0; i < FreeRectangles.Count; ++i)
-            {
-                var freeRectangle = FreeRectangles[i];
-                for (int j = i + 1; j < FreeRectangles.Count; ++j)
-                {
-                    var otherFreeRectangle = FreeRectangles[j];
-
-                    if (otherFreeRectangle.Contains(freeRectangle))
-                    {
-                        FreeRectangles.RemoveAt(i--);
-                        break;
-                    }
-                    if (freeRectangle.Contains(otherFreeRectangle))
-                    {
-                        FreeRectangles.RemoveAt(j--);
-                    }
-                }
-            }
-        }
-
-
         public enum FreeRectangleChoiceHeuristic
         {
             BestShortSideFit,
         };
+
+        #endregion
     }
 }
