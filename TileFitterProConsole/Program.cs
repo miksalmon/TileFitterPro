@@ -3,7 +3,6 @@ using System;
 using System.Threading.Tasks;
 using TileFitter.Models;
 using TileFitter.Services;
-using TileFitter.Algorithms;
 using Windows.ApplicationModel.Core;
 using System.Linq;
 
@@ -24,7 +23,8 @@ namespace TileFitterProConsole
                 var runner = new TileFitterRunner();
                 var result = runner.Run(container, new TileFitterOptions(Algorithm.MaximalRectangles, Heuristic.BestShortSideFit));
 
-                // TODO: output to output file
+                var writer = new ContainerWriter();
+                await writer.WriteOutput(arguments.OutputFilePath, result);
 
                 Console.ReadLine();
             }

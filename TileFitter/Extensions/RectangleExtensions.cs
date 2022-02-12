@@ -18,5 +18,8 @@ namespace TileFitter.Extensions
         {
             return rectangle.Width >= otherRectangle.Width && rectangle.Height >= otherRectangle.Height;
         }
+
+        // TODO: fix, this is not being used
+        public static string ToString(this Rectangle rectangle) => $"{rectangle.Width}, {rectangle.Height}, {rectangle.X}, {rectangle.Y}";
     }
 }
