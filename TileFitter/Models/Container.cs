@@ -31,11 +31,9 @@ namespace TileFitter.Models
 
         public int Perimeter => (2 * Width) + (2 * Height);
 
-        public bool IsValidSolution => ValidateSolution();
-
         public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToOutputFormat()));
 
-        public bool ValidateSolution()
+        public bool IsValidSolution()
         {
             if(RemainingTiles.Any())
             {
@@ -65,6 +63,58 @@ namespace TileFitter.Models
             newContainer.PlacedTiles.AddRange(PlacedTiles);
 
             return newContainer;
+        }
+
+        public void GenerateValidRemainingTiles(int numberOfTiles)
+        {
+            int numberOfFailures = 0;
+            RemainingTiles.Add(new Rectangle(0, 0, Width, Height));
+            var random = new Random();
+
+            while (RemainingTiles.Count < numberOfTiles && numberOfFailures < numberOfTiles)
+            {
+                var maxArea = RemainingTiles.Max(x => x.GetArea());
+                var tileToSplit = RemainingTiles.First(x => x.GetArea() == maxArea);
+
+                bool shouldSplitWidth;
+
+                if (tileToSplit.Width > 1 && tileToSplit.Height > 1)
+                {
+                    shouldSplitWidth = tileToSplit.Width > tileToSplit.Height;
+                }
+                else if(tileToSplit.Width > 1)
+                {
+                    shouldSplitWidth = true;
+                }
+                else if(tileToSplit.Height > 1)
+                {
+                    shouldSplitWidth = false;
+                }
+                else
+                {
+                    numberOfFailures++;
+                    continue;
+                }
+
+                numberOfFailures = 0;
+
+                if(shouldSplitWidth)
+                {
+                    var splitWidth = random.Next(1, tileToSplit.Width - 1);
+                    var splitRectangles = tileToSplit.SplitAlongWidth(splitWidth);
+                    RemainingTiles.Add(splitRectangles.rectangle1);
+                    RemainingTiles.Add(splitRectangles.rectangle2);
+                }
+                else
+                {
+                    var splitHeight = random.Next(1, tileToSplit.Height - 1);
+                    var splitRectangles = tileToSplit.SplitAlongHeight(splitHeight);
+                    RemainingTiles.Add(splitRectangles.rectangle1);
+                    RemainingTiles.Add(splitRectangles.rectangle2);
+                }
+
+                RemainingTiles.RemoveAt(0);
+            }
         }
     }
 }

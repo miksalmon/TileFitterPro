@@ -37,6 +37,11 @@ namespace TileFitter.Algorithms
                 throw new ArgumentNullException(nameof(Container.RemainingTiles));
             }
 
+            if(container.Area < container.RemainingTiles.Sum(x => x.GetArea()))
+            {
+                return container;
+            }
+
             Initialize(container);
 
             // Copy since we iterate on them and need to remove them as we go

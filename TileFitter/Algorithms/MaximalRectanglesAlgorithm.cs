@@ -13,23 +13,14 @@ namespace TileFitter.Algorithms
 {
     public class MaximalRectanglesAlgorithm : IAlgorithm
     {
-        public Task<List<Container>> ExecuteAll(Container container)
+        public List<Task<Container>> ExecuteAllHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var resultContainer = container.Clone();
-            var runningAlgorithms = new List<Task<Container>>();
 
-            var maxRectsRunningAlgorithms = ExecuteAllMaximalRectanglesHeuristicsAsync(resultContainer);
-            runningAlgorithms.AddRange(maxRectsRunningAlgorithms);
-
-            var resultTask = Task.WhenAll(runningAlgorithms).ContinueWith(x =>
-            {
-                return x.Result.ToList().Where(c => c.IsValidSolution).ToList();
-            });
-
-            return resultTask;
+            return ExecuteAllMaximalRectanglesHeuristicsAsync(resultContainer, cancellationToken);
         }
 
-        public Task<Container> ExecuteAllUntilSuccess(Container container)
+        public Task<Container> ExecuteAllHeuristicsUntilFirstSuccess(Container container, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -39,7 +30,7 @@ namespace TileFitter.Algorithms
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Task<Container>> ExecuteAllMaximalRectanglesHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
+        public List<Task<Container>> ExecuteAllMaximalRectanglesHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var tasks = new List<Task<Container>>();
 

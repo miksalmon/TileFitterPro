@@ -16,22 +16,19 @@ namespace TileFitter.Services
             Algorithms = algorithms;
         }
 
-        public Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var resultContainer = container.Clone();
-            var runningAlgorithms = new List<Task<List<Container>>>();
+            var runningAlgorithms = new List<Task<Container>>();
 
             foreach (var algorithm in Algorithms)
             {
-                runningAlgorithms.Add(algorithm.ExecuteAll(resultContainer));
+                runningAlgorithms.AddRange(algorithm.ExecuteAllHeuristicsAsync(resultContainer, cancellationToken));
             }
 
-            var resultTask = Task.WhenAll(runningAlgorithms).ContinueWith(x =>
-            {
-                return x.Result.ToList().SelectMany(l => l).Where(c => c.IsValidSolution);
-            });
+            var results = await Task.WhenAll(runningAlgorithms);
             
-            return resultTask;
+            return results.ToList().Where(c => c.IsValidSolution());
         }
     }
 }

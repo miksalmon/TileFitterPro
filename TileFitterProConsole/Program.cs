@@ -10,6 +10,7 @@ using System.IO;
 using TileFitter.Interfaces;
 using System.Collections.Generic;
 using TileFitter.Algorithms;
+using System.Threading;
 
 namespace TileFitterProConsole
 {
@@ -31,9 +32,11 @@ namespace TileFitterProConsole
 
                 var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
 
-                var solutions = await runner.FindAllSolutionsAsync(container);
+                var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+                var cancellationToken = cts.Token;
+                var solutions = await runner.FindAllSolutionsAsync(container, cancellationToken);
                 var result = solutions.FirstOrDefault();
-                if (result != null && result.IsValidSolution)
+                if (result != null && result.IsValidSolution())
                 {
                     var writer = new ContainerWriter();
                     await writer.WriteOutput(arguments.OutputFilePath, result);

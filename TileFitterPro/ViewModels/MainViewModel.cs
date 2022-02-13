@@ -98,7 +98,14 @@ namespace TileFitterPro.ViewModels
                 }
                 catch (Exception)
                 {
-                    // TODO: add error message
+                    var dialog = new ContentDialog
+                    {
+                        Content = "File could not be read.",
+                        CloseButtonText = "Close",
+                        DefaultButton = ContentDialogButton.Close
+                    };
+                    var task = dialog.ShowAsync();
+
                     CurrentFile = null;
                     TilesToPlace.Clear();
                     Reset();
@@ -108,10 +115,10 @@ namespace TileFitterPro.ViewModels
 
         public async Task OnRunCommandAsync()
         {
-            var container = new Container(Container.Width, Container.Height, TilesToPlace);
+            Container = new Container(Container.Width, Container.Height, TilesToPlace);
 
             var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
-            var solutions = await runner.FindAllSolutionsAsync(container);
+            var solutions = await runner.FindAllSolutionsAsync(Container);
 
             BuildSolution(solutions);
 
