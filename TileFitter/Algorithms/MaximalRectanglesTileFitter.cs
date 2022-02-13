@@ -125,8 +125,6 @@ namespace TileFitter.Algorithms
         {
             switch (heuristic)
             {
-                case MaximalRectanglesHeuristic.ContactPointRule:
-                    throw new NotImplementedException();
                 case MaximalRectanglesHeuristic.BottomLeftRule:
                     return FindTilePlacementBottomLeftRule(tile);
                 case MaximalRectanglesHeuristic.BestAreaFit:

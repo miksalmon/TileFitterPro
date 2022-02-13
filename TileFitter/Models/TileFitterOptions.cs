@@ -1,34 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TileFitter.Interfaces;
 
-namespace TileFitter.Models
+namespace TileFitter
 {
     public class TileFitterOptions
     {
-        public TileFitterOptions(Algorithm algorithm, Heuristic heuristic)
-        {
-            Algorithm = algorithm;
-            Heuristic = heuristic;
-        }
-
         public Algorithm Algorithm { get; }
-
-        public Heuristic Heuristic { get; }
     }
 
     public enum Algorithm
     {
         MaximalRectangles
-    }
-
-    public enum Heuristic
-    {
-        BestShortSideFit,
-        BestLongSideFit,
-        BestAreaFit,
-        BottomLeftRule
     }
 }

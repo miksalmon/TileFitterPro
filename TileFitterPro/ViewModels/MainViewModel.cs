@@ -18,6 +18,8 @@ using TileFitter.Services;
 using System.Linq;
 using System.Numerics;
 using Windows.Storage;
+using TileFitter.Interfaces;
+using TileFitter.Algorithms;
 
 namespace TileFitterPro.ViewModels
 {
@@ -108,7 +110,7 @@ namespace TileFitterPro.ViewModels
         {
             var container = new Container(Container.Width, Container.Height, TilesToPlace);
 
-            var runner = new TileFitterRunner();
+            var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
             var solutions = await runner.FindAllSolutionsAsync(container);
 
             BuildSolution(solutions);

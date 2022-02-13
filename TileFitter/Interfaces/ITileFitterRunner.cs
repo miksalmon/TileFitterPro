@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TileFitter.Algorithms;
 using TileFitter.Models;
@@ -10,10 +11,12 @@ namespace TileFitter.Interfaces
 {
     internal interface ITileFitterRunner
     {
-        Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container);
+        IEnumerable<IAlgorithm> Algorithms { get; }
 
-        Container FindFastestSolution(Container container);
+        Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken);
 
-        Container FindSolution(Container container, TileFitterOptions options);
+        // Container FindFastestSolution(Container container);
+
+        // Container FindSolution(Container container, TileFitterOptions options);
     }
 }

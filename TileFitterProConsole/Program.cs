@@ -7,6 +7,9 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using System.Linq;
 using System.IO;
+using TileFitter.Interfaces;
+using System.Collections.Generic;
+using TileFitter.Algorithms;
 
 namespace TileFitterProConsole
 {
@@ -26,13 +29,11 @@ namespace TileFitterProConsole
 
                 var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
-                var runner = new TileFitterRunner();
-
-                var result = runner.FindFastestSolution(container);
+                var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
 
                 var solutions = await runner.FindAllSolutionsAsync(container);
-
-                if(result.IsValidSolution)
+                var result = solutions.FirstOrDefault();
+                if (result != null && result.IsValidSolution)
                 {
                     var writer = new ContainerWriter();
                     await writer.WriteOutput(arguments.OutputFilePath, result);

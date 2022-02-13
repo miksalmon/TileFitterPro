@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TileFitter.Algorithms;
 using TileFitter.Interfaces;
 using TileFitter.Models;
 
@@ -12,109 +9,70 @@ namespace TileFitter.Services
 {
     public class TileFitterRunner : ITileFitterRunner
     {
-        public Container FindSolution(Container container, TileFitterOptions options)
+        public IEnumerable<IAlgorithm> Algorithms { get; }
+
+        public TileFitterRunner(IEnumerable<IAlgorithm> algorithms)
         {
-            var resultContainer = container.Clone();
-            switch(options.Algorithm)
-            {
-                case Algorithm.MaximalRectangles:
-                default:
-                    return RunOptimalMaximalRectangles(resultContainer, options.Heuristic);
-            }
+            Algorithms = algorithms;
         }
 
-        public Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container)
+        //public async Container FindSolution(Container container, TileFitterOptions options)
+        //{
+        //    var resultContainer = container.Clone();
+        //    switch(options.Algorithm)
+        //    {
+        //        case Algorithm.MaximalRectangles:
+        //        default:
+        //            return await (new MaximalRectanglesAlgorithm().Execute(container, options.Heuristic));
+        //    }
+        //}
+
+        public Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var resultContainer = container.Clone();
-            var runningAlgorithms = new List<Task<Container>>();
+            var runningAlgorithms = new List<Task<List<Container>>>();
 
-            var maxRectsRunningAlgorithms = RunAllMaximalRectanglesHeuristicsAsync(resultContainer);
-            runningAlgorithms.AddRange(maxRectsRunningAlgorithms);
+            foreach (var algorithm in Algorithms)
+            {
+                runningAlgorithms.Add(algorithm.ExecuteAll(resultContainer));
+            }
 
             var resultTask = Task.WhenAll(runningAlgorithms).ContinueWith(x =>
             {
-                return x.Result.ToList().Where(c => c.IsValidSolution);
+                return x.Result.ToList().SelectMany(l => l).Where(c => c.IsValidSolution);
             });
             
             return resultTask;
         }
 
-        public IEnumerable<Task<Container>> RunAllMaximalRectanglesHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
-        {
-            var tasks = new List<Task<Container>>();
+        
 
-            foreach(var heuristic in Enum.GetValues(typeof(Heuristic)) as Heuristic[])
-            {
-                var resultContainer = container.Clone();
-                tasks.Add(Task.Run(() => RunOptimalMaximalRectangles(resultContainer, heuristic), cancellationToken));
-            }
+        //public Container FindFastestSolution(Container container)
+        //{
+        //    var runningAlgorithms = new List<Task<Container>>();
+        //    var cts = new CancellationTokenSource();
+        //    var cancellationToken = cts.Token;
 
-            return tasks;
-        }
+        //    var maxRectsRunningAlgorithms = RunAllMaximalRectanglesHeuristicsAsync(container, cancellationToken);
+        //    runningAlgorithms.AddRange(maxRectsRunningAlgorithms);
 
-        public Container FindFastestSolution(Container container)
-        {
-            var runningAlgorithms = new List<Task<Container>>();
-            var cts = new CancellationTokenSource();
-            var cancellationToken = cts.Token;
+        //    Container solution = null;
+        //    Container bestInvalidSolution = container;
+        //    Task.WhenAny(runningAlgorithms).ContinueWith(x =>
+        //    {
+        //        var result = x.Result.Result;
+        //        if (result.IsValidSolution)
+        //        {
+        //            solution = result;
+        //            cts.Cancel();
+        //        }
+        //        else if(result.RemainingTiles.Count < bestInvalidSolution.RemainingTiles.Count)
+        //        {
+        //            bestInvalidSolution = result;
+        //        }
+        //    }).Wait();
 
-            var maxRectsRunningAlgorithms = RunAllMaximalRectanglesHeuristicsAsync(container, cancellationToken);
-            runningAlgorithms.AddRange(maxRectsRunningAlgorithms);
-
-            Container solution = null;
-            Container bestInvalidSolution = container;
-            Task.WhenAny(runningAlgorithms).ContinueWith(x =>
-            {
-                var result = x.Result.Result;
-                if (result.IsValidSolution)
-                {
-                    solution = result;
-                    cts.Cancel();
-                }
-                else if(result.RemainingTiles.Count < bestInvalidSolution.RemainingTiles.Count)
-                {
-                    bestInvalidSolution = result;
-                }
-            }).Wait();
-
-            return solution ?? bestInvalidSolution;
-        }
-
-        #region MaximalRectangles
-
-        public Container RunBlindMaximalRectangles(Container container, Heuristic heuristic)
-        {
-            var tileFitter = new MaximalRectanglesTileFitter();
-            var maximalRectanglesHeuristic = GetMaximalRectanglesHeuristic(heuristic);
-            var result = tileFitter.FitTilesBlindly(container, maximalRectanglesHeuristic);
-            return result;
-        }
-        public Container RunOptimalMaximalRectangles(Container container, Heuristic heuristic)
-        {
-            var tileFitter = new MaximalRectanglesTileFitter();
-            var maximalRectanglesHeuristic = GetMaximalRectanglesHeuristic(heuristic);
-            var result = tileFitter.FitTilesOptimally(container, maximalRectanglesHeuristic);
-            return result;
-        }
-
-
-        public MaximalRectanglesHeuristic GetMaximalRectanglesHeuristic(Heuristic heuristic)
-        {
-            switch (heuristic)
-            {
-                case Heuristic.BottomLeftRule:
-                    return MaximalRectanglesHeuristic.BottomLeftRule;
-                case Heuristic.BestAreaFit:
-                    return MaximalRectanglesHeuristic.BestAreaFit;
-                case Heuristic.BestLongSideFit:
-                    return MaximalRectanglesHeuristic.BestLongSideFit;
-                case Heuristic.BestShortSideFit:
-                    return MaximalRectanglesHeuristic.BestShortSideFit;
-                default:
-                    throw new InvalidCastException("Invalid heuristic for MaximalRectangles algorithm.");
-            }
-        }
-
-        #endregion
+        //    return solution ?? bestInvalidSolution;
+        //}
     }
 }

@@ -120,8 +120,15 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\MaximalRectanglesAlgorithm.cs" />
     <Compile Include="Algorithms\MaximalRectanglesTileFitter.cs" />
+    <Compile Include="Comparers\RandomComparer.cs" />
+    <Compile Include="Comparers\RectangleAreaComparer.cs" />
+    <Compile Include="Comparers\RectanglePerimeterComparer.cs" />
+    <Compile Include="Comparers\RectangleHeightComparer.cs" />
+    <Compile Include="Comparers\RectangleWidthComparer.cs" />
     <Compile Include="Extensions\RectangleExtensions.cs" />
+    <Compile Include="Interfaces\IAlgorithm.cs" />
     <Compile Include="Interfaces\IContainerWriter.cs" />
     <Compile Include="Interfaces\ITileFitterRunner.cs" />
     <Compile Include="Interfaces\ITileReader.cs" />

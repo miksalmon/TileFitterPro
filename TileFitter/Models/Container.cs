@@ -29,6 +29,8 @@ namespace TileFitter.Models
 
         public int Area => Width * Height;
 
+        public int Perimeter => (2 * Width) + (2 * Height);
+
         public bool IsValidSolution => ValidateSolution();
 
         public string GetPlacedTilesString() => string.Join('\n', PlacedTiles.Select(x => x.ToOutputFormat()));

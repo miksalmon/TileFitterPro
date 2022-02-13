@@ -9,9 +9,14 @@ namespace TileFitter.Extensions
 {
     public static class RectangleExtensions
     {
-        public static int GetArea(this Rectangle  rectangle)
+        public static int GetArea(this Rectangle rectangle)
         {
             return rectangle.Width * rectangle.Height;
+        }
+
+        public static int GetPerimeter(this Rectangle rectangle)
+        {
+            return (2 * rectangle.Width) + (2 * rectangle.Height);
         }
 
         public static bool CanContain(this Rectangle rectangle, Rectangle otherRectangle)
