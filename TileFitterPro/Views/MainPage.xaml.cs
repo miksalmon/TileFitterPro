@@ -16,18 +16,18 @@ namespace TileFitterPro.Views
             InitializeComponent();
         }
 
-        public bool NonNullable(bool? b)
+        public bool ResultToBool(ResultEnum result, bool invert)
         {
-            return b.HasValue && b.Value;
-        }
-
-        public bool Invert(bool? b)
-        {
-            if (b.HasValue)
+            switch(result)
             {
-                return !b.Value;
+                case ResultEnum.Success:
+                    return invert ? false : true;
+                case ResultEnum.Failure:
+                    return invert ? true : false;
+                case ResultEnum.Undefined:
+                default:
+                    return false;
             }
-            return false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

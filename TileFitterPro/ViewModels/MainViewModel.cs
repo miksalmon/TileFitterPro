@@ -51,8 +51,8 @@ namespace TileFitterPro.ViewModels
             set { SetProperty(ref _currentFile, value); }
         }
 
-        private bool? _result;
-        public bool? Result
+        private ResultEnum _result;
+        public ResultEnum Result
         {
             get { return _result; }
             set { SetProperty(ref _result, value); }
@@ -131,7 +131,7 @@ namespace TileFitterPro.ViewModels
         {
             if (solutions.Any())
             {
-                Result = true;
+                Result = ResultEnum.Success;
                 ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
 
                 var solution = solutions.First();
@@ -143,7 +143,7 @@ namespace TileFitterPro.ViewModels
             }
             else
             {
-                Result = false;
+                Result = ResultEnum.Failure;
                 ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
             }
         }
@@ -190,8 +190,16 @@ namespace TileFitterPro.ViewModels
 
         private void Reset()
         {
+            Result = ResultEnum.Undefined;
             Solution?.Clear();
             CanvasElement?.Invalidate();
         }
+    }
+
+    public enum ResultEnum
+    {
+        Undefined,
+        Success,
+        Failure
     }
 }
