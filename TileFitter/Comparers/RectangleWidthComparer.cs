@@ -19,9 +19,17 @@ namespace TileFitter.Comparers
             {
                 return 1;
             }
+            if (x.Height > y.Height)
+            {
+                return -1;
+            }
+            else if (x.Height < y.Height)
+            {
+                return 1;
+            }
             else
             {
-                return x.Height >= y.Height ? -1 : 1;
+                return 0;
             }
         }
     }

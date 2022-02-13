@@ -122,7 +122,6 @@
   <ItemGroup>
     <Compile Include="Algorithms\MaximalRectanglesAlgorithm.cs" />
     <Compile Include="Algorithms\MaximalRectanglesTileFitter.cs" />
-    <Compile Include="Comparers\RandomComparer.cs" />
     <Compile Include="Comparers\RectangleAreaComparer.cs" />
     <Compile Include="Comparers\RectanglePerimeterComparer.cs" />
     <Compile Include="Comparers\RectangleHeightComparer.cs" />

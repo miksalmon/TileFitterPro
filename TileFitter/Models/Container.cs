@@ -65,8 +65,9 @@ namespace TileFitter.Models
             return newContainer;
         }
 
-        public void GenerateValidRemainingTiles(int numberOfTiles)
+        public void GenerateValidRemainingTiles(int numberOfTiles, double packingRatio)
         {
+            RemainingTiles.Clear();
             int numberOfFailures = 0;
             RemainingTiles.Add(new Rectangle(0, 0, Width, Height));
             var random = new Random();
@@ -100,21 +101,28 @@ namespace TileFitter.Models
 
                 if(shouldSplitWidth)
                 {
-                    var splitWidth = random.Next(1, tileToSplit.Width - 1);
+                    var splitWidth = random.Next(1, tileToSplit.Width);
                     var splitRectangles = tileToSplit.SplitAlongWidth(splitWidth);
                     RemainingTiles.Add(splitRectangles.rectangle1);
                     RemainingTiles.Add(splitRectangles.rectangle2);
                 }
                 else
                 {
-                    var splitHeight = random.Next(1, tileToSplit.Height - 1);
+                    var splitHeight = random.Next(1, tileToSplit.Height);
                     var splitRectangles = tileToSplit.SplitAlongHeight(splitHeight);
                     RemainingTiles.Add(splitRectangles.rectangle1);
                     RemainingTiles.Add(splitRectangles.rectangle2);
                 }
 
-                RemainingTiles.RemoveAt(0);
+                RemainingTiles.Remove(tileToSplit);
             }
+
+            var randomIndex = random.Next(0, RemainingTiles.Count);
+            RemainingTiles.RemoveAt(randomIndex);
+            randomIndex = random.Next(0, RemainingTiles.Count);
+            RemainingTiles.RemoveAt(randomIndex);
+            randomIndex = random.Next(0, RemainingTiles.Count);
+            RemainingTiles.RemoveAt(randomIndex);
         }
     }
 }

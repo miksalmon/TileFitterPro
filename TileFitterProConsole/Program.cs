@@ -41,7 +41,7 @@ namespace TileFitterProConsole
                     var writer = new ContainerWriter();
                     await writer.WriteOutput(arguments.OutputFilePath, result);
 
-                    Console.WriteLine($"Sucess! The solution was written to {Path.GetFullPath(arguments.OutputFilePath)}");
+                    Console.WriteLine($"Success! The solution was written to {Path.GetFullPath(arguments.OutputFilePath)}");
                 }
                 else
                 {

@@ -77,8 +77,6 @@ namespace TileFitter.Algorithms
         {
             switch(heuristic)
             {
-                case BlindMaximalRectanglesSortHeuristic.Random:
-                    return new RandomComparer();
                 case BlindMaximalRectanglesSortHeuristic.PerimeterDescending:
                     return new RectanglePerimeterComparer();
                 case BlindMaximalRectanglesSortHeuristic.WidthDescending:
@@ -96,8 +94,7 @@ namespace TileFitter.Algorithms
             AreaDescending,
             PerimeterDescending,
             WidthDescending,
-            HeightDescending,
-            Random
+            HeightDescending
         }
     }
 }

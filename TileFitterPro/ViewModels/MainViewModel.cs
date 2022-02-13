@@ -116,13 +116,23 @@ namespace TileFitterPro.ViewModels
         public async Task OnRunCommandAsync()
         {
             Container = new Container(Container.Width, Container.Height, TilesToPlace);
-
+            
             var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
             var solutions = await runner.FindAllSolutionsAsync(Container);
 
-            BuildSolution(solutions);
+            if (solutions.Any())
+            {
+                var solution = solutions.First();
+                BuildSolution(solution);
 
-            CanvasElement.Invalidate();
+                Result = ResultEnum.Success;
+                ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
+            }
+            else
+            {
+                Result = ResultEnum.Failure;
+                ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
+            }
         }
 
         public bool CanRunCommand(Container container, List<Rectangle> tilestoPlace)
@@ -134,25 +144,16 @@ namespace TileFitterPro.ViewModels
             return true;
         }
 
-        private void BuildSolution(IEnumerable<Container> solutions)
+        private void BuildSolution(Container solution)
         {
-            if (solutions.Any())
+            Reset();
+            foreach (var placedTile in solution.PlacedTiles)
             {
-                Result = ResultEnum.Success;
-                ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
+                Windows.UI.Color color = Windows.UI.Color.FromArgb(byte.MaxValue, (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB));
+                Solution.Add(new UiTile { Rectangle = new Rect(placedTile.X, placedTile.Y, placedTile.Width, placedTile.Height), Color = color });
+            }
 
-                var solution = solutions.First();
-                foreach (var placedTile in solution.PlacedTiles)
-                {
-                    Windows.UI.Color color = Windows.UI.Color.FromArgb(byte.MaxValue, (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB));
-                    Solution.Add(new UiTile { Rectangle = new Rect(placedTile.X, placedTile.Y, placedTile.Width, placedTile.Height), Color = color });
-                }
-            }
-            else
-            {
-                Result = ResultEnum.Failure;
-                ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
-            }
+            CanvasElement.Invalidate();
         }
 
         internal void DrawSolution(CanvasDrawingSession drawingSession)
