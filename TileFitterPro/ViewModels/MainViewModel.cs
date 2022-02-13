@@ -20,6 +20,7 @@ using System.Numerics;
 using Windows.Storage;
 using TileFitter.Interfaces;
 using TileFitter.Algorithms;
+using System.Threading;
 
 namespace TileFitterPro.ViewModels
 {
@@ -117,12 +118,14 @@ namespace TileFitterPro.ViewModels
         {
             Container = new Container(Container.Width, Container.Height, TilesToPlace);
             
-            var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
-            var solutions = await runner.FindAllSolutionsAsync(Container);
+            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
 
-            if (solutions.Any())
+            var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+            var cancellationToken = cts.Token;
+            var solution = await runner.FindFastestSolutionAsync(Container, cancellationToken);
+
+            if (solution != null)
             {
-                var solution = solutions.First();
                 BuildSolution(solution);
 
                 Result = ResultEnum.Success;
@@ -133,6 +136,26 @@ namespace TileFitterPro.ViewModels
                 Result = ResultEnum.Failure;
                 ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
             }
+            //var solutions = await runner.FindAllSolutionsAsync(Container);
+
+            //if (solutions.Any())
+            //{
+            //    var solution = solutions.First();
+            //    BuildSolution(solution);
+
+            //    Result = ResultEnum.Success;
+            //    ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
+            //}
+            //else
+            //{
+            //    Result = ResultEnum.Failure;
+            //    ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
+            //}
+        }
+
+        private object CancellationTokenSource(TimeSpan timeSpan)
+        {
+            throw new NotImplementedException();
         }
 
         public bool CanRunCommand(Container container, List<Rectangle> tilestoPlace)

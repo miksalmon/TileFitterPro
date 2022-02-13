@@ -11,23 +11,34 @@ using TileFitter.Models;
 
 namespace TileFitter.Algorithms
 {
-    public class MaximalRectanglesAlgorithm : IAlgorithm
+    public class MaximalRectanglesAlgorithmRunner : IAlgorithmRunner
     {
-        public List<Task<Container>> ExecuteAllHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
+        public List<Task<Container>> RunAllHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
         {
-            var resultContainer = container.Clone();
-
-            return ExecuteAllMaximalRectanglesHeuristicsAsync(resultContainer, cancellationToken);
+            return ExecuteAllMaximalRectanglesHeuristicsAsync(container, cancellationToken);
         }
 
-        public Task<Container> ExecuteAllHeuristicsUntilFirstSuccess(Container container, CancellationToken cancellationToken = default)
+        public async Task<Container> RunAllHeuristicsUntilFirstSuccessAsync(Container container, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
-        }
+            List<Task<Container>> runningTasks = RunAllHeuristicsAsync(container, cancellationToken);
+            Task<Container> completedTask;
+            Container resultContainer = null;
+            do
+            {
+                completedTask = await Task.WhenAny(runningTasks);
+                runningTasks.Remove(completedTask);
+                if(completedTask.IsCompletedSuccessfully)
+                {
+                    var result = await completedTask;
+                    if(result.IsValidSolution())
+                    {
+                        resultContainer = result;
+                        break;
+                    }
+                }
+            } while (runningTasks.Count > 0);
 
-        public Task<Container> Execute(Container container, MaximalRectanglesHeuristic heuristic)
-        {
-            throw new NotImplementedException();
+            return resultContainer;
         }
 
         public List<Task<Container>> ExecuteAllMaximalRectanglesHeuristicsAsync(Container container, CancellationToken cancellationToken = default)

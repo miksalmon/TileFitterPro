@@ -30,7 +30,7 @@ namespace TileFitterProConsole
 
                 var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
-                var runner = new TileFitterRunner(new List<IAlgorithm>() { new MaximalRectanglesAlgorithm() });
+                var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
 
                 var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
                 var cancellationToken = cts.Token;

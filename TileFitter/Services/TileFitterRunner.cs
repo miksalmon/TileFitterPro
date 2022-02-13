@@ -9,11 +9,11 @@ namespace TileFitter.Services
 {
     public class TileFitterRunner : ITileFitterRunner
     {
-        public IEnumerable<IAlgorithm> Algorithms { get; }
+        public IEnumerable<IAlgorithmRunner> AlgorithmRunners { get; }
 
-        public TileFitterRunner(IEnumerable<IAlgorithm> algorithms)
+        public TileFitterRunner(IEnumerable<IAlgorithmRunner> runners)
         {
-            Algorithms = algorithms;
+            AlgorithmRunners = runners;
         }
 
         public async Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken = default)
@@ -21,14 +21,30 @@ namespace TileFitter.Services
             var resultContainer = container.Clone();
             var runningAlgorithms = new List<Task<Container>>();
 
-            foreach (var algorithm in Algorithms)
+            foreach (var runner in AlgorithmRunners)
             {
-                runningAlgorithms.AddRange(algorithm.ExecuteAllHeuristicsAsync(resultContainer, cancellationToken));
+                runningAlgorithms.AddRange(runner.RunAllHeuristicsAsync(resultContainer, cancellationToken));
             }
 
             var results = await Task.WhenAll(runningAlgorithms);
             
             return results.ToList().Where(c => c.IsValidSolution());
+        }
+
+        public Task<Container> FindFastestSolutionAsync(Container container, CancellationToken cancellationToken)
+        {
+            var resultContainer = container.Clone();
+            var runningAlgorithms = new List<Task<Container>>();
+
+            foreach (var runner in AlgorithmRunners)
+            {
+                runningAlgorithms.AddRange(runner.RunAllHeuristicsAsync(resultContainer, cancellationToken));
+            }
+
+            //var results = await Task.WhenAll(runningAlgorithms);
+
+            //return results.ToList().Where(c => c.IsValidSolution());
+            return Task.FromResult<Container>(null);
         }
     }
 }
