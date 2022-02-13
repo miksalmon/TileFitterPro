@@ -15,9 +15,5 @@ namespace TileFitter.Interfaces
         Container FindFastestSolution(Container container);
 
         Container FindSolution(Container container, TileFitterOptions options);
-
-        Container RunMaximalRectangles(Container container, Heuristic heuristic);
-
-        MaximalRectanglesHeuristic GetMaximalRectanglesHeuristic(Heuristic heurtic);
     }
 }

@@ -30,7 +30,36 @@ namespace TileFitter.Algorithms
             FreeRectangles.Add(new Rectangle(0, 0, Container.Width, Container.Height));
         }
 
-        public Container FitTiles(Container container, MaximalRectanglesHeuristic heuristic)
+        public Container FitTilesBlindly(Container container, MaximalRectanglesHeuristic heuristic)
+        {
+            if (container.RemainingTiles is null || container is null)
+            {
+                throw new ArgumentNullException(nameof(Container.RemainingTiles));
+            }
+
+            Initialize(container);
+
+            // Copy since we iterate on them and need to remove them as we go
+            var tilesToPlace = Container.RemainingTiles.Select(x => x).ToList();
+
+            foreach (var tile in tilesToPlace)
+            {
+                var bestTilePlacement = FindTilePlacement(tile, heuristic);
+
+                // Cannot fit tile
+                if (bestTilePlacement.PlacedTile == Rectangle.Empty)
+                {
+                    return Container;
+                }
+
+                PlaceTile(bestTilePlacement);
+            }
+
+            return Container;
+        }
+
+
+        public Container FitTilesOptimally(Container container, MaximalRectanglesHeuristic heuristic)
         {
             if (container.RemainingTiles is null || container is null)
             {

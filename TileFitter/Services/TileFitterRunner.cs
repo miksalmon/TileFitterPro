@@ -19,7 +19,7 @@ namespace TileFitter.Services
             {
                 case Algorithm.MaximalRectangles:
                 default:
-                    return RunMaximalRectangles(resultContainer, options.Heuristic);
+                    return RunOptimalMaximalRectangles(resultContainer, options.Heuristic);
             }
         }
 
@@ -46,7 +46,7 @@ namespace TileFitter.Services
             foreach(var heuristic in Enum.GetValues(typeof(Heuristic)) as Heuristic[])
             {
                 var resultContainer = container.Clone();
-                tasks.Add(Task.Run(() => RunMaximalRectangles(resultContainer, heuristic), cancellationToken));
+                tasks.Add(Task.Run(() => RunOptimalMaximalRectangles(resultContainer, heuristic), cancellationToken));
             }
 
             return tasks;
@@ -82,13 +82,21 @@ namespace TileFitter.Services
 
         #region MaximalRectangles
 
-        public Container RunMaximalRectangles(Container container, Heuristic heuristic)
+        public Container RunBlindMaximalRectangles(Container container, Heuristic heuristic)
         {
             var tileFitter = new MaximalRectanglesTileFitter();
             var maximalRectanglesHeuristic = GetMaximalRectanglesHeuristic(heuristic);
-            var result = tileFitter.FitTiles(container, maximalRectanglesHeuristic);
+            var result = tileFitter.FitTilesBlindly(container, maximalRectanglesHeuristic);
             return result;
         }
+        public Container RunOptimalMaximalRectangles(Container container, Heuristic heuristic)
+        {
+            var tileFitter = new MaximalRectanglesTileFitter();
+            var maximalRectanglesHeuristic = GetMaximalRectanglesHeuristic(heuristic);
+            var result = tileFitter.FitTilesOptimally(container, maximalRectanglesHeuristic);
+            return result;
+        }
+
 
         public MaximalRectanglesHeuristic GetMaximalRectanglesHeuristic(Heuristic heuristic)
         {
