@@ -14,9 +14,5 @@ namespace TileFitter.Interfaces
         IEnumerable<IAlgorithm> Algorithms { get; }
 
         Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken);
-
-        // Container FindFastestSolution(Container container);
-
-        // Container FindSolution(Container container, TileFitterOptions options);
     }
 }

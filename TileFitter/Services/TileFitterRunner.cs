@@ -16,17 +16,6 @@ namespace TileFitter.Services
             Algorithms = algorithms;
         }
 
-        //public async Container FindSolution(Container container, TileFitterOptions options)
-        //{
-        //    var resultContainer = container.Clone();
-        //    switch(options.Algorithm)
-        //    {
-        //        case Algorithm.MaximalRectangles:
-        //        default:
-        //            return await (new MaximalRectanglesAlgorithm().Execute(container, options.Heuristic));
-        //    }
-        //}
-
         public Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var resultContainer = container.Clone();
@@ -44,35 +33,5 @@ namespace TileFitter.Services
             
             return resultTask;
         }
-
-        
-
-        //public Container FindFastestSolution(Container container)
-        //{
-        //    var runningAlgorithms = new List<Task<Container>>();
-        //    var cts = new CancellationTokenSource();
-        //    var cancellationToken = cts.Token;
-
-        //    var maxRectsRunningAlgorithms = RunAllMaximalRectanglesHeuristicsAsync(container, cancellationToken);
-        //    runningAlgorithms.AddRange(maxRectsRunningAlgorithms);
-
-        //    Container solution = null;
-        //    Container bestInvalidSolution = container;
-        //    Task.WhenAny(runningAlgorithms).ContinueWith(x =>
-        //    {
-        //        var result = x.Result.Result;
-        //        if (result.IsValidSolution)
-        //        {
-        //            solution = result;
-        //            cts.Cancel();
-        //        }
-        //        else if(result.RemainingTiles.Count < bestInvalidSolution.RemainingTiles.Count)
-        //        {
-        //            bestInvalidSolution = result;
-        //        }
-        //    }).Wait();
-
-        //    return solution ?? bestInvalidSolution;
-        //}
     }
 }
