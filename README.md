@@ -1,5 +1,5 @@
 # TileFitterPro
-TileFitter
+
 ## Problem
 A given a list of tiles needs to be packed to fit into a single large container in any order or position that will fit. The tiles may not be rotated or scaled.
 
@@ -29,13 +29,13 @@ width,height,top,left
 All coordinates are relative to the top-left of the rectangle which is coordinate (0,0). Therefore, an output of ```3,3,1,2``` is a rectangle of width 3 and height 3 located at coordinates (2,1) from the top left.
 
 ## Implementation
-Being an NP-Hard problem, many great minds have spent time researching how to solve this problem. One such mind is Jukka Jylänki, whose Maximal Rectangles algorithm, detailed in this [paper](http://clb.demon.fi/files/RectangleBinPack.pdf)[^1] was implemented. This algorithm is detailed in the [Maximal Rectangles](#maximal-rectangles) section. All solutions outputted by this application have been computed by an implementation of this algorithm using a multitute of heuristics and optimizations also presented in the aforementioned research. Although only one algorithm is used to solve the given problems, many different heuristics running in parallel improves the chance of finding at least one solution. While some heuristics are generally good, some are moreso given a specific kind of input, meaning that it works best for those. Running multiple of these algorithms with various of heuristics would yield the highest confidence on the output provided. Because of this one principle, the [Tile Fitter](#tilefitter) library was implemented in such a way that it allows running many algorithms and heuristics at the same time for better efficiency and results.
+Being an NP-Hard problem, many great minds have spent time researching how to solve this problem. One such mind is Jukka Jylänki, who has detailed many algorithms and heuristics in this [paper](http://clb.demon.fi/files/RectangleBinPack.pdf) was implemented. This algorithm is detailed in the [Maximal Rectangles](#maximal-rectangles) section. All solutions output by this application have been computed by an implementation of this algorithm using a multitute of heuristics and optimizations also presented in the aforementioned research. Although only one algorithm is used to solve the given problems, many different heuristics running in parallel improves the chance of finding at least one solution. While some heuristics are generally good, some are moreso given a specific kind of input, meaning that it works best for those. Running multiple of these algorithms with various of heuristics would yield the highest confidence on the output provided. Because of this one principle, the [Tile Fitter](#tilefitter) library was implemented in such a way that it allows running many algorithms and heuristics at the same time for better efficiency and results.
 
 ## Project Structure
 The solution is organized in 4 C# projects.
 
 ### TileFitter
-This class library contains the different algorithms and models as well as many abstraction classes making it easier to consume. As mentionned, it was abstracted in a way that makes it flexible and extensible to allow the addition of further algorithms or heuristics to solve a wider range of problems.
+This class library contains the different algorithms and models as well as many abstraction classes making it easier to consume. As mentioned, it was abstracted in a way that makes it flexible and extensible to allow the addition of further algorithms or heuristics to solve a wider range of problems.
 
 ### TileFitterPro
 This UWP application is an interactive way to interact with the [TileFitter](#tilefitter) library and visualize the results. It is also possible to generate input sets and visually see them before running the algorithm and seeing their packed placement. More on how to use those features in the [How to use UWP app](#how-to-use-uwp-app) section. To answer the given requirements, it can also be launched as a console application to specify the initial arguments.
@@ -49,10 +49,10 @@ This tests library contains unit tests of the TileFitter library. It is incomple
 ### Implemented Algorithms
 
 #### Maximal Rectangles
-This algorithm is essentially an extension and improvement on the Guillotine algorithm, also explained in the above [paper]()[^1]. Like it, it stores a list of free eligible rectangles where tiles could be placed. However, instead of choosing one of the split axes like it is done in the Guillotine algorithm, both splits are taken, resulting in overlapping free rectangles, as shown in the following picture.
+This algorithm is essentially an extension and improvement on the Guillotine algorithm, also explained in the paper above. Like it, it stores a list of free eligible rectangles where tiles could be placed. However, instead of choosing one of the split axes like it is done in the Guillotine algorithm, both splits are taken, resulting in overlapping free rectangles, as shown in the following picture.
 ![Maximal Rectangles Splits](./docs/MaximalRectanglesSplits.png)
 
-More details such as the pseudo code and other details of the algorithm can be found in the above mentionned [paper]()[^1].
+More details such as the pseudo code and other details of the algorithm can be found in the paper mentioned above.
 
 ##### Heuristics
 The Maximal Rectangles algorithm runs on an heuristic for its choice of free rectangle in which to place a tile. When running using the optimization technique implemented, it will go through each tile to place, test it against each free rectangle, and choose the tile to place and the free rectangle to place it in by comparing different metrics. These metrics are what the heuristics dictate. The free rectangle choice heuristics implemented are detailed in the next sections.
