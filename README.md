@@ -29,10 +29,10 @@ width,height,top,left
 All coordinates are relative to the top-left of the rectangle which is coordinate (0,0). Therefore, an output of ```3,3,1,2``` is a rectangle of width 3 and height 3 located at coordinates (2,1) from the top left.
 
 ## Implementation
-Being an NP-Hard problem, many great minds have spent time researching how to solve this problem. One such mind is Jukka Jylänki, who has detailed many algorithms and heuristics in this [paper](http://clb.demon.fi/files/RectangleBinPack.pdf) was implemented. This algorithm is detailed in the [Maximal Rectangles](#maximal-rectangles) section. All solutions output by this application have been computed by an implementation of this algorithm using a multitute of heuristics and optimizations also presented in the aforementioned research. Although only one algorithm is used to solve the given problems, many different heuristics running in parallel improves the chance of finding at least one solution. While some heuristics are generally good, some are moreso given a specific kind of input, meaning that it works best for those. Running multiple of these algorithms with various of heuristics would yield the highest confidence on the output provided. Because of this one principle, the [Tile Fitter](#tilefitter) library was implemented in such a way that it allows running many algorithms and heuristics at the same time for better efficiency and results.
+This problem is part of the NP-Hard bin packing problem family. There is extensive research and papers that elaborate on possible methods, heuristics and algorithms to solve the problem. The solution implemented here is based on the algorithms and heuristics presented in this [paper](https://github.com/juj/RectangleBinPack/blob/master/RectangleBinPack.pdf). This algorithm's implementation is detailed in the [Maximal Rectangles](#maximal-rectangles) section. All solutions output by this application have been computed using a multitute of heuristics and optimizations also presented in the aforementioned research. Although only one algorithm is used to solve the given problems, many different heuristics running in parallel improves the chance of finding at least one solution. While some heuristics are generally good, some are moreso given a specific kind of input, meaning that it works best for those. Running multiple of these algorithms with various of heuristics would yield the highest confidence on the output provided. Because of this one principle, the [Tile Fitter](#tilefitter) library was implemented in such a way that it allows running many algorithms and heuristics at the same time for better efficiency and results.
 
 ## Project Structure
-The solution is organized in 4 C# projects.
+The solution is organized in 4 UWP C# projects.
 
 ### TileFitter
 This class library contains the different algorithms and models as well as many abstraction classes making it easier to consume. As mentioned, it was abstracted in a way that makes it flexible and extensible to allow the addition of further algorithms or heuristics to solve a wider range of problems.
@@ -41,7 +41,7 @@ This class library contains the different algorithms and models as well as many 
 This UWP application is an interactive way to interact with the [TileFitter](#tilefitter) library and visualize the results. It is also possible to generate input sets and visually see them before running the algorithm and seeing their packed placement. More on how to use those features in the [How to use UWP app](#how-to-use-uwp-app) section. To answer the given requirements, it can also be launched as a console application to specify the initial arguments.
 
 ### TileFitterProConsole
-This console application is a command line interfface to interact with the [TileFitter](#tilefitter) library to output solutions to a specified problem.
+This UWP console application is a command line interfface to interact with the [TileFitter](#tilefitter) library to output solutions to a specified problem.
 
 ### TileFitterTests
 This tests library contains unit tests of the TileFitter library. It is incomplete.
@@ -93,12 +93,12 @@ Then, in order for both the Console App and UWP app to work, you need to give th
 Then, you need to enable broad file system access as such:
 ![Broad File System Access](./docs/BroadFileSystemAccess.png)
 
-## How to use Console app
+## How to use UWP Console App
 To use the Console app, one must execute it using the following format: ```TileFitterProConsole --InputSet <inputFilePath> --ContainerWidth <width> --ContainerHeight <height> --Output <outputFilePath>``` where width and height are integers.
 
 Note that if a file already exists at the output file path, it will be replaced with the solution.
 
-## How to use UWP app
+## How to use UWP App
 This UWP app can be used to set the different input of the problem and visualizing the solution. 
 ![TileFitterPro Controls](./docs/TileFitterProControls.png)
 
