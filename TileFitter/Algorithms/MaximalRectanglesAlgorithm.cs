@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.PointOfService;
-using Windows.Foundation;
-using Windows.Globalization.DateTimeFormatting;
 using TileFitter.Models;
 using TileFitter.Extensions;
+using TileFitter.Interfaces;
 
 namespace TileFitter.Algorithms
 {
     /// <summary>
     /// Implementation of the MaximalRectangles algorithm.
     /// </summary>
-    internal class MaximalRectanglesAlgorithm
+    public class MaximalRectanglesAlgorithm : IAlgorithm
     {
+        public List<Heuristic> Heuristics { get; } = new List<Heuristic>() { Heuristic.BestShortSideFit, Heuristic.BestLongSideFit, Heuristic.BestAreaFit, Heuristic.BottomLeftRule};
+
         private Container Container { get; set; }
 
         private List<Rectangle> FreeRectangles { get; set; } = new List<Rectangle>();
@@ -33,7 +31,7 @@ namespace TileFitter.Algorithms
             FreeRectangles.Add(new Rectangle(0, 0, Container.Width, Container.Height));
         }
 
-        public Container FitTilesBlindly(Container container, MaximalRectanglesHeuristic heuristic)
+        public Container RunBlindly(Container container, Heuristic heuristic)
         {
             if (container.RemainingTiles is null || container is null)
             {
@@ -67,7 +65,7 @@ namespace TileFitter.Algorithms
         }
 
 
-        public Container FitTilesOptimally(Container container, MaximalRectanglesHeuristic heuristic)
+        public Container RunOptimally(Container container, Heuristic heuristic)
         {
             if (container.RemainingTiles is null || container is null)
             {
@@ -111,7 +109,7 @@ namespace TileFitter.Algorithms
             Container.PlacedTiles.Add(tilePlacement.PlacedTile);
         }
 
-        private MaximalRectanglesTilePlacement FindBestTileToPlace(MaximalRectanglesHeuristic heuristic)
+        private MaximalRectanglesTilePlacement FindBestTileToPlace(Heuristic heuristic)
         {
             MaximalRectanglesTilePlacement bestTilePlacement = new MaximalRectanglesTilePlacement(Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, new HeuristicMetrics(int.MaxValue, int.MaxValue));
             foreach (var tile in Container.RemainingTiles)
@@ -129,17 +127,17 @@ namespace TileFitter.Algorithms
             return bestTilePlacement;
         }
 
-        private MaximalRectanglesTilePlacement FindTilePlacement(Rectangle tile, MaximalRectanglesHeuristic heuristic)
+        private MaximalRectanglesTilePlacement FindTilePlacement(Rectangle tile, Heuristic heuristic)
         {
             switch (heuristic)
             {
-                case MaximalRectanglesHeuristic.BottomLeftRule:
+                case Heuristic.BottomLeftRule:
                     return FindTilePlacementBottomLeftRule(tile);
-                case MaximalRectanglesHeuristic.BestAreaFit:
+                case Heuristic.BestAreaFit:
                     return FindTilePlacementBestAreaFit(tile);
-                case MaximalRectanglesHeuristic.BestLongSideFit:
+                case Heuristic.BestLongSideFit:
                     return FindTilePlacementBestLongSideFit(tile);
-                case MaximalRectanglesHeuristic.BestShortSideFit:
+                case Heuristic.BestShortSideFit:
                 default:
                     return FindTilePlacementBestShortSideFit(tile);
             }
@@ -418,13 +416,4 @@ namespace TileFitter.Algorithms
 
         #endregion
     }
-
-    public enum MaximalRectanglesHeuristic
-    {
-        BestShortSideFit,
-        BestLongSideFit,
-        BestAreaFit,
-        BottomLeftRule,
-        ContactPointRule
-    };
 }

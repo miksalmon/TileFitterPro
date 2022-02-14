@@ -168,7 +168,7 @@ namespace TileFitterPro.ViewModels
         {
             Container = new Container(Container.Width, Container.Height, TilesToPlace);
 
-            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
+            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new AlgorithmRunner<MaximalRectanglesAlgorithm>() });
 
             var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
             var cancellationToken = cts.Token;

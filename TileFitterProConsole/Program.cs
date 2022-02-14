@@ -71,7 +71,7 @@ namespace TileFitterProConsole
 
         static async Task<Container> GetSolution(Container container)
         {
-            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
+            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new AlgorithmRunner<MaximalRectanglesAlgorithm>() });
 
             var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
             var cancellationToken = cts.Token;
