@@ -89,8 +89,10 @@ namespace TileFitterPro.ViewModels
         private ICommand _importCsvCommand;
         public ICommand ImportCommand => _importCsvCommand ?? (_importCsvCommand = new AsyncRelayCommand(OnImportCsvCommandAsync));
 
-        private ICommand _generateCommand;
+        private ICommand _exportCsvCommand;
+        public ICommand ExportCommand => _exportCsvCommand ?? (_exportCsvCommand = new AsyncRelayCommand(OnExportCsvCommandAsync));
 
+        private ICommand _generateCommand;
         public ICommand GenerateCommand =>
             _generateCommand ?? (_generateCommand = new RelayCommand(OnGenerateCommand));
 
@@ -132,6 +134,36 @@ namespace TileFitterPro.ViewModels
             }
         }
 
+        public async Task OnExportCsvCommandAsync()
+        {
+            var picker = new Windows.Storage.Pickers.FileSavePicker();
+            picker.SuggestedStartLocation =
+                Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+            picker.FileTypeChoices.Add("CSV", new List<string>() { ".csv" });
+            picker.SuggestedFileName = $"{CurrentFile?.DisplayName ?? "generated"}_{Container.Width}_{Container.Height}_solution";
+
+            var file = await picker.PickSaveFileAsync();
+            if(file != null)
+            {
+                try
+                {
+                    var containerWriter = new ContainerWriter();
+                    await containerWriter.WriteOutput(file, Container);
+                    // Reset?
+                }
+                catch(Exception e)
+                {
+                    var dialog = new ContentDialog
+                    {
+                        Content = "File could not be written.",
+                        CloseButtonText = "Close",
+                        DefaultButton = ContentDialogButton.Close
+                    };
+                    var task = dialog.ShowAsync();
+                }
+            }
+        }
+
         public async Task OnRunCommandAsync()
         {
             Container = new Container(Container.Width, Container.Height, TilesToPlace);
@@ -144,6 +176,7 @@ namespace TileFitterPro.ViewModels
             var solution = solutions.FirstOrDefault();
             if (solution != null)
             {
+                Container = solution;
                 BuildTilesToDisplay(solution.PlacedTiles);
 
                 Result = ResultEnum.Success;

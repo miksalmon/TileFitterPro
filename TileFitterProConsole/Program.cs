@@ -11,6 +11,7 @@ using TileFitter.Interfaces;
 using System.Collections.Generic;
 using TileFitter.Algorithms;
 using System.Threading;
+using System.Drawing;
 
 namespace TileFitterProConsole
 {
@@ -21,27 +22,16 @@ namespace TileFitterProConsole
             try
             {
                 var arguments = (Parser.Default.ParseArguments<CommandLineArguments>(args) as Parsed<CommandLineArguments>).Value;
-                var reader = new TileReader();
 
-                var fullPath = Path.GetFullPath(arguments.InputSetFilePath);
-                var file = await StorageFile.GetFileFromPathAsync(fullPath);
-
-                var tiles = (await reader.ReadTilesAsync(file)).ToList();
+                var tiles = await ReadTiles(arguments.InputSetFilePath);
 
                 var container = new Container(arguments.ContainerWidth, arguments.ContainerHeight, tiles);
 
-                var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
+                var solution = await GetSolution(container);
 
-                var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-                var cancellationToken = cts.Token;
-                var solutions = await runner.FindAllSolutionsAsync(container, cancellationToken);
-                var result = solutions.FirstOrDefault();
-                if (result != null && result.IsValidSolution())
+                if (solution != null && solution.IsValidSolution())
                 {
-                    var writer = new ContainerWriter();
-                    await writer.WriteOutput(arguments.OutputFilePath, result);
-
-                    Console.WriteLine($"Success! The solution was written to {Path.GetFullPath(arguments.OutputFilePath)}");
+                    await WriteSolution(arguments.OutputFilePath, solution);
                 }
                 else
                 {
@@ -53,7 +43,7 @@ namespace TileFitterProConsole
             }
             catch (UnauthorizedAccessException)
             {
-                Console.WriteLine($"File system access denied. Please make sure to enable TileFitterPro App permissions for file system access.");
+                Console.WriteLine($"File system access denied. Please make sure to enable TileFitterProConsole App permissions for file system access.");
                 Console.WriteLine("Press any key to exit application...");
                 Console.ReadLine();
                 CoreApplication.Exit();
@@ -65,6 +55,44 @@ namespace TileFitterProConsole
                 Console.ReadLine();
                 CoreApplication.Exit();
             }
+        }
+
+        static async Task<List<Rectangle>> ReadTiles(string inputFilePath)
+        {
+            var reader = new TileReader();
+
+            var fullPath = Path.GetFullPath(inputFilePath);
+            var file = await StorageFile.GetFileFromPathAsync(fullPath);
+
+            var tiles = (await reader.ReadTilesAsync(file)).ToList();
+
+            return tiles;
+        }
+
+        static async Task<Container> GetSolution(Container container)
+        {
+            var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
+
+            var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+            var cancellationToken = cts.Token;
+            var solutions = await runner.FindAllSolutionsAsync(container, cancellationToken);
+            var result = solutions.FirstOrDefault();
+
+            return result;
+        }
+
+        static async Task WriteSolution(string outputFilePath, Container result)
+        {
+            var writer = new ContainerWriter();
+            var outputFullPath = Path.GetFullPath(outputFilePath);
+            var outputFolderPath = Path.GetDirectoryName(outputFullPath);
+            var outputFileName = Path.GetFileName(outputFullPath);
+
+            var outputFolder = await StorageFolder.GetFolderFromPathAsync(outputFolderPath);
+            var outputFile = await outputFolder.CreateFileAsync(outputFileName, CreationCollisionOption.ReplaceExisting);
+            await writer.WriteOutput(outputFile, result);
+
+            Console.WriteLine($"Success! The solution was written to {Path.GetFullPath(outputFilePath)}");
         }
     }
 }

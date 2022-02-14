@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TileFitter.Models;
+using Windows.Storage;
 
 namespace TileFitter.Interfaces
 {
@@ -8,6 +9,6 @@ namespace TileFitter.Interfaces
     /// </summary>
     internal interface IContainerWriter
     {
-        Task WriteOutput(string filePath, Container container);
+        Task WriteOutput(StorageFile file, Container container);
     }
 }

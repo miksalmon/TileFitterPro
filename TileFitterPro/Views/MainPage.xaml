@@ -61,6 +61,11 @@
                     <Button
                         Margin="0,0,12,0"
                         VerticalAlignment="Bottom"
+                        Command="{x:Bind ViewModel.ExportCommand, Mode=OneWay}"
+                        Content="Save output file" />
+                    <Button
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Bottom"
                         Command="{x:Bind ViewModel.GenerateCommand, Mode=OneWay}"
                         Content="Generate"
                         Style="{StaticResource AccentButtonStyle}" />
