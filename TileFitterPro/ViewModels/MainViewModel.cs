@@ -21,6 +21,7 @@ using Windows.Storage;
 using TileFitter.Interfaces;
 using TileFitter.Algorithms;
 using System.Threading;
+using Windows.UI.Xaml;
 
 namespace TileFitterPro.ViewModels
 {
@@ -95,6 +96,8 @@ namespace TileFitterPro.ViewModels
         private ICommand _generateCommand;
         public ICommand GenerateCommand =>
             _generateCommand ?? (_generateCommand = new RelayCommand(OnGenerateCommand));
+
+        private CancellationTokenSource CancellationTokenSource { get; set; }
 
         public MainViewModel()
         {
@@ -188,9 +191,23 @@ namespace TileFitterPro.ViewModels
 
             var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new AlgorithmRunner<MaximalRectanglesAlgorithm>() });
 
-            var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-            var cancellationToken = cts.Token;
-            var solutions = await runner.FindAllSolutionsAsync(Container, cancellationToken);
+            CancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+            var cancellationToken = CancellationTokenSource.Token;
+            var pointer = Window.Current.CoreWindow.PointerCursor;
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Wait, 1);
+
+            List<Container> solutions = new List<Container>();
+            try
+            {
+                solutions.AddRange(await runner.FindAllSolutionsAsync(Container, cancellationToken));
+            }
+            catch (OperationCanceledException)
+            {
+                Reset();
+            }
+
+            Window.Current.CoreWindow.PointerCursor = pointer;
             var solution = solutions.FirstOrDefault();
             if (solution != null)
             {
@@ -203,7 +220,8 @@ namespace TileFitterPro.ViewModels
             else
             {
                 Result = ResultEnum.Failure;
-                ResultMessage = $"The tiles from {CurrentFile?.Name ?? "generated input"} do not fit into a {Container.Width}x{Container.Height} container.";
+                var isTimeout = CancellationTokenSource.IsCancellationRequested;
+                ResultMessage = isTimeout ? $"Could not fit tiles from {CurrentFile?.Name ?? "generated input"} because the algorithms timed out." : $"The tiles from {CurrentFile?.Name ?? "generated input"} do not fit into a {Container.Width}x{Container.Height} container.";
             }
         }
 
@@ -286,6 +304,9 @@ namespace TileFitterPro.ViewModels
             Result = ResultEnum.Undefined;
             TilesToDisplay?.Clear();
             CanvasElement?.Invalidate();
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+            CancellationTokenSource?.Cancel();
         }
 
         private int GetNumberOfRectanglesToGenerate()

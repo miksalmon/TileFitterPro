@@ -25,7 +25,11 @@ namespace TileFitter.Algorithms
             foreach (var heuristic in dummyAlgorithm.Heuristics)
             {
                 var resultContainer = container.Clone();
-                tasks.Add(Task.Run(() => ExecuteOptimally(resultContainer, heuristic), cancellationToken));
+                tasks.Add(Task.Run(() =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return ExecuteOptimally(resultContainer, heuristic);
+                }, cancellationToken));
                 tasks.AddRange(RunAllBlindHeuristics(resultContainer, heuristic, cancellationToken));
             }
 
@@ -42,7 +46,11 @@ namespace TileFitter.Algorithms
 
                 resultContainer.RemainingTiles.Sort(GetComparerByHeuristic(sortHeuristic));
                 
-                tasks.Add(Task.Run(() => RunBlindMaximalRectangles(resultContainer, heuristic), cancellationToken));
+                tasks.Add(Task.Run(() =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return RunBlindMaximalRectangles(resultContainer, heuristic);
+                }, cancellationToken));
             }
             return tasks;
         }
