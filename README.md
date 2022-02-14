@@ -1,7 +1,7 @@
 # TileFitterPro
 
 ## Problem
-A given a list of tiles needs to be packed to fit into a single large container in any order or position that will fit. The tiles may not be rotated or scaled.
+A given list of tiles needs to be packed to fit into a single large container in any order or position that will fit. The tiles may not be rotated or scaled.
 
 ## Input
 The input is a list of rectangles to place within a given container of specified width and height. It should be in the specified CSV file under the following format: 
