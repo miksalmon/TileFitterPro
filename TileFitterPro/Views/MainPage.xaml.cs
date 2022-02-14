@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TileFitterPro.Views
 {
+    /// <summary>
+    /// Code behind of the Main page containing the input  and drawing of the solutions
+    /// </summary>
     public sealed partial class MainPage : Page
     {
         public MainViewModel ViewModel { get; } = new MainViewModel();
