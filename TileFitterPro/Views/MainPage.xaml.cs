@@ -46,7 +46,7 @@ namespace TileFitterPro.Views
 
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
         {
-            ViewModel.DrawSolution(args.DrawingSession);
+            ViewModel.DrawTiles(args.DrawingSession);
         }
 
         private void Canvas_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)

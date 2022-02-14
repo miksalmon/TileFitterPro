@@ -26,6 +26,7 @@ namespace TileFitterPro.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
+        private double PACKING_RATIO = 0.9;
         private const int MAX_RGB = 200;
         private Random random = new Random();
 
@@ -66,21 +67,28 @@ namespace TileFitterPro.ViewModels
             set { SetProperty(ref _resultMessage, value); }
         }
 
-        public List<UiTile> Solution { get; set; }
+        public List<UiTile> TilesToDisplay { get; set; }
+
         public CanvasControl CanvasElement { get; set; }
+
         public Grid CanvasContainer { get; set; }
 
-        ICommand _runCommand;
+        private ICommand _runCommand;
         public ICommand RunCommand => _runCommand ?? (_runCommand = new AsyncRelayCommand(OnRunCommandAsync));
 
-        ICommand _importCsvCommand;
+        private ICommand _importCsvCommand;
         public ICommand ImportCommand => _importCsvCommand ?? (_importCsvCommand = new AsyncRelayCommand(OnImportCsvCommandAsync));
+
+        private ICommand _generateCommand;
+
+        public ICommand GenerateCommand =>
+            _generateCommand ?? (_generateCommand = new RelayCommand(OnGenerateCommand));
 
         public MainViewModel()
         {
             TilesToPlace = new List<Rectangle>();
             Container = new Container(Sizes[0], Sizes[0], new List<Rectangle>());
-            Solution = new List<UiTile>();
+            TilesToDisplay = new List<UiTile>();
         }
 
         public async Task OnImportCsvCommandAsync()
@@ -117,71 +125,59 @@ namespace TileFitterPro.ViewModels
         public async Task OnRunCommandAsync()
         {
             Container = new Container(Container.Width, Container.Height, TilesToPlace);
-            
+
             var runner = new TileFitterRunner(new List<IAlgorithmRunner>() { new MaximalRectanglesAlgorithmRunner() });
 
             var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
             var cancellationToken = cts.Token;
-            var solution = await runner.FindFastestSolutionAsync(Container, cancellationToken);
-
+            var solutions = await runner.FindAllSolutionsAsync(Container, cancellationToken);
+            var solution = solutions.FirstOrDefault();
             if (solution != null)
             {
-                BuildSolution(solution);
+                BuildTilesToDisplay(solution.PlacedTiles);
 
                 Result = ResultEnum.Success;
-                ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
+                ResultMessage = $"The tiles from {CurrentFile?.Name ?? "generated input"} fit into a {Container.Width}x{Container.Height} container.";
             }
             else
             {
                 Result = ResultEnum.Failure;
-                ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
+                ResultMessage = $"The tiles from {CurrentFile?.Name ?? "generated input"} do not fit into a {Container.Width}x{Container.Height} container.";
             }
-            //var solutions = await runner.FindAllSolutionsAsync(Container);
-
-            //if (solutions.Any())
-            //{
-            //    var solution = solutions.First();
-            //    BuildSolution(solution);
-
-            //    Result = ResultEnum.Success;
-            //    ResultMessage = $"The tiles from {CurrentFile.Name} fit into a {Container.Width}x{Container.Height} container.";
-            //}
-            //else
-            //{
-            //    Result = ResultEnum.Failure;
-            //    ResultMessage = $"The tiles from {CurrentFile.Name} do not fit into a {Container.Width}x{Container.Height} container.";
-            //}
         }
 
-        private object CancellationTokenSource(TimeSpan timeSpan)
+        public void OnGenerateCommand()
         {
-            throw new NotImplementedException();
+            Container = new Container(Container.Width, Container.Height, new List<Rectangle>());
+            Container.GenerateValidRemainingTiles(10, PACKING_RATIO);
+            TilesToPlace = Container.RemainingTiles;
+            BuildTilesToDisplay(Container.RemainingTiles);
         }
 
-        public bool CanRunCommand(Container container, List<Rectangle> tilestoPlace)
+        public bool CanRunCommand(Container container, List<Rectangle> tilesToPlace)
         {
-            if (container.Width == 0 || container.Height == 0 || tilestoPlace.Count == 0)
+            if (container.Width == 0 || container.Height == 0 || tilesToPlace.Count == 0)
             {
                 return false;
             }
             return true;
         }
 
-        private void BuildSolution(Container solution)
+        private void BuildTilesToDisplay(List<Rectangle> tilesToDisplay)
         {
             Reset();
-            foreach (var placedTile in solution.PlacedTiles)
+            foreach (var tile in tilesToDisplay)
             {
                 Windows.UI.Color color = Windows.UI.Color.FromArgb(byte.MaxValue, (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB), (byte)random.Next(MAX_RGB));
-                Solution.Add(new UiTile { Rectangle = new Rect(placedTile.X, placedTile.Y, placedTile.Width, placedTile.Height), Color = color });
+                TilesToDisplay.Add(new UiTile { Rectangle = new Rect(tile.X, tile.Y, tile.Width, tile.Height), Color = color });
             }
 
             CanvasElement.Invalidate();
         }
 
-        internal void DrawSolution(CanvasDrawingSession drawingSession)
+        internal void DrawTiles(CanvasDrawingSession drawingSession)
         {
-            if (Container == null || Solution == null || CanvasContainer == null || CanvasElement == null)
+            if (Container == null || TilesToDisplay == null || CanvasContainer == null || CanvasElement == null)
             {
                 return;
             }
@@ -193,7 +189,7 @@ namespace TileFitterPro.ViewModels
             drawingSession.FillRectangle(scaledContainerRectangle, Colors.White);
             drawingSession.DrawRectangle(scaledContainerRectangle, Colors.Black, 4);
 
-            foreach (var tile in Solution)
+            foreach (var tile in TilesToDisplay)
             {
                 var brush = new CanvasSolidColorBrush(CanvasElement.Device, tile.Color);
                 var scaledTile = tile.Rectangle.Scale(scale);
@@ -222,7 +218,7 @@ namespace TileFitterPro.ViewModels
         private void Reset()
         {
             Result = ResultEnum.Undefined;
-            Solution?.Clear();
+            TilesToDisplay?.Clear();
             CanvasElement?.Invalidate();
         }
     }

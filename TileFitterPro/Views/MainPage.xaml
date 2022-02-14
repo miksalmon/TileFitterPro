@@ -49,6 +49,13 @@
                         SelectedItem="{x:Bind ViewModel.Container.Height, Mode=OneWay}"
                         SelectionChanged="HeightComboBox_SelectionChanged"
                         TextSubmitted="HeightComboBox_TextSubmitted" />
+                    <Button
+                        Margin="0,0,12,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{x:Bind ViewModel.GenerateCommand, Mode=OneWay}"
+                        Content="Generate"
+                        Style="{StaticResource AccentButtonStyle}" />
                 </StackPanel>
                 <TextBlock Text="{x:Bind ViewModel.CurrentFile.Path, Mode=OneWay}" />
             </StackPanel>
