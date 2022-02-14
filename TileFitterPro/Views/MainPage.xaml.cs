@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TileFitter.Models;
 using TileFitterPro.Models;
 using TileFitterPro.ViewModels;
@@ -93,19 +94,26 @@ namespace TileFitterPro.Views
 
         private void WidthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = e.AddedItems.FirstOrDefault() as int?;
-            if (item.HasValue)
+            if (e.AddedItems.FirstOrDefault() is int item)
             {
-                ViewModel.Container = new Container(item.Value, ViewModel.Container.Height, ViewModel.TilesToPlace);
+                ViewModel.Container = new Container(item, ViewModel.Container.Height, ViewModel.TilesToPlace);
             }
         }
 
         private void HeightComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = e.AddedItems.FirstOrDefault() as int?;
-            if (item.HasValue)
+            if (e.AddedItems.FirstOrDefault() is int item)
             {
-                ViewModel.Container = new Container(ViewModel.Container.Width, item.Value, ViewModel.TilesToPlace);
+                ViewModel.Container = new Container(ViewModel.Container.Width, item, ViewModel.TilesToPlace);
+            }
+        }
+
+        private void NumberOfRectanglesToGenerate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+            if (Enum.TryParse(e.AddedItems.FirstOrDefault() as string, out RectangleDensity density))
+            {
+                ViewModel.RectanglesToGenerateDensity = density;
             }
         }
     }

@@ -32,11 +32,21 @@ namespace TileFitterPro.ViewModels
 
         public List<int> Sizes { get; } = new List<int>() { 6, 8, 10, 12, 16, 20, 30, 40, 50, 100, 200, 500, 1000 };
 
+        public List<RectangleDensity> RectanglesDensities = new List<RectangleDensity>()
+            { RectangleDensity.Low, RectangleDensity.Medium, RectangleDensity.High };
+
         private Container _container;
         public Container Container
         {
             get { return _container; }
             set { SetProperty(ref _container, value); Reset(); }
+        }
+
+        private RectangleDensity _rectanglesToGenerateDensity;
+        public RectangleDensity RectanglesToGenerateDensity
+        {
+            get { return _rectanglesToGenerateDensity; }
+            set { SetProperty(ref _rectanglesToGenerateDensity, value); Reset(); }
         }
 
         private List<Rectangle> _tilesToPlace;
@@ -149,7 +159,7 @@ namespace TileFitterPro.ViewModels
         public void OnGenerateCommand()
         {
             Container = new Container(Container.Width, Container.Height, new List<Rectangle>());
-            Container.GenerateValidRemainingTiles(10, PACKING_RATIO);
+            Container.GenerateValidRemainingTiles(GetNumberOfRectanglesToGenerate(), PACKING_RATIO);
             TilesToPlace = Container.RemainingTiles;
             BuildTilesToDisplay(Container.RemainingTiles);
         }
@@ -221,6 +231,20 @@ namespace TileFitterPro.ViewModels
             TilesToDisplay?.Clear();
             CanvasElement?.Invalidate();
         }
+
+        private int GetNumberOfRectanglesToGenerate()
+        {
+            switch (RectanglesToGenerateDensity)
+            {
+                case RectangleDensity.Low:
+                    return (int)Math.Sqrt(Container.Area) / 2;
+                case RectangleDensity.Medium:
+                default:
+                    return (int)Math.Sqrt(Container.Area);
+                case RectangleDensity.High:
+                    return (int)Math.Sqrt(Container.Area);
+            }
+        }
     }
 
     public enum ResultEnum
@@ -228,5 +252,12 @@ namespace TileFitterPro.ViewModels
         Undefined,
         Success,
         Failure
+    }
+
+    public enum RectangleDensity
+    {
+        Low,
+        Medium,
+        High
     }
 }

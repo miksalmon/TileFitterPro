@@ -49,9 +49,17 @@
                         SelectedItem="{x:Bind ViewModel.Container.Height, Mode=OneWay}"
                         SelectionChanged="HeightComboBox_SelectionChanged"
                         TextSubmitted="HeightComboBox_TextSubmitted" />
+                    <ComboBox
+                        x:Name="NumberOfRectanglesToGenerateComboBox"
+                        Width="100"
+                        Margin="0,0,12,0"
+                        Header="# of Rectangles"
+                        IsEditable="False"
+                        ItemsSource="{x:Bind ViewModel.RectanglesDensities}"
+                        SelectedItem="{x:Bind ViewModel.RectanglesToGenerateDensity, Mode=OneWay}"
+                        SelectionChanged="NumberOfRectanglesToGenerate_SelectionChanged"/>
                     <Button
                         Margin="0,0,12,0"
-                        HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Command="{x:Bind ViewModel.GenerateCommand, Mode=OneWay}"
                         Content="Generate"
