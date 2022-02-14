@@ -110,7 +110,7 @@ Another feature that was implemented in this app is the ability to generate inpu
 
 Note: in between the generation and execution, each tile will change color, making them difficult to track.
 
-It can also be ran via the command line to set the initial inputs following the same format specified in the [Console App](#how-to-use-console-app) section but changing the application name: ```TileFitterPro --InputSet <inputFilePath> --ContainerWidth <width> --ContainerHeight <height> --Output <outputFilePath>
+It can also be ran via the command line to set the initial inputs following the same format specified in the [Console App](#how-to-use-console-app) section but changing the application name: ```TileFitterPro --InputSet <inputFilePath> --ContainerWidth <width> --ContainerHeight <height> --Output <outputFilePath>```
 
 ## References
 1. Jukka Jylänki's article ["A Thousand
