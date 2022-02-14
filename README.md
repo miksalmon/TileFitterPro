@@ -113,3 +113,7 @@ It can also be ran via the command line to set the initial inputs following the 
 Ways to Pack the Bin - A Practical Approach to Two-Dimensional Rectangle Bin
 Packing."](https://github.com/juj/RectangleBinPack/blob/master/RectangleBinPack.pdf)
 2. Jukka Jylänki's open source [C++ implementation](https://github.com/juj/RectangleBinPack/)
+3. David Colson's blog post [Exploring rectangle packing algorithms](https://www.david-colson.com/2020/03/10/exploring-rect-packing.html)
+4. Eric Huang and Rechard E. Korf' paper [New Improvements in Optimal Rectangle Packing](https://www.ijcai.org/Proceedings/09/Papers/092.pdf)
+5. [Binary Tree Packing Algorithm](https://blackpawn.com/texts/lightmaps/default.html)
+6. Matt Perdeck's CodeProject article on [Rectangle Packing Algorithm for Building CSS Sprints](https://www.codeproject.com/Articles/210979/Fast-optimizing-rectangle-packing-algorithm-for-bu)

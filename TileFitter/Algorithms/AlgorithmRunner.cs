@@ -21,8 +21,8 @@ namespace TileFitter.Algorithms
         {
             var tasks = new List<Task<Container>>();
 
-            var dummyAlgorithm = new T();
-            foreach (var heuristic in dummyAlgorithm.Heuristics)
+            var algorithm = new T();
+            foreach (var heuristic in algorithm.Heuristics)
             {
                 var resultContainer = container.Clone();
                 tasks.Add(Task.Run(() =>
@@ -30,13 +30,13 @@ namespace TileFitter.Algorithms
                     cancellationToken.ThrowIfCancellationRequested();
                     return ExecuteOptimally(resultContainer, heuristic);
                 }, cancellationToken));
-                tasks.AddRange(RunAllBlindHeuristics(resultContainer, heuristic, cancellationToken));
+                tasks.AddRange(RunAllBlindHeuristicsAsync(resultContainer, heuristic, cancellationToken));
             }
 
             return tasks;
         }
 
-        private List<Task<Container>> RunAllBlindHeuristics(Container container, Heuristic heuristic, CancellationToken cancellationToken = default)
+        private List<Task<Container>> RunAllBlindHeuristicsAsync(Container container, Heuristic heuristic, CancellationToken cancellationToken = default)
         {
             var tasks = new List<Task<Container>>();
 
