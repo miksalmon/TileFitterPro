@@ -65,7 +65,7 @@ namespace TileFitter.Models
             return newContainer;
         }
 
-        public void GenerateValidRemainingTiles(int numberOfTiles, double packingRatio)
+        public void GenerateValidRemainingTiles(int numberOfTiles, double targetPackingRatio)
         {
             RemainingTiles.Clear();
             int numberOfFailures = 0;
@@ -117,12 +117,13 @@ namespace TileFitter.Models
                 RemainingTiles.Remove(tileToSplit);
             }
 
-            var randomIndex = random.Next(0, RemainingTiles.Count);
-            RemainingTiles.RemoveAt(randomIndex);
-            randomIndex = random.Next(0, RemainingTiles.Count);
-            RemainingTiles.RemoveAt(randomIndex);
-            randomIndex = random.Next(0, RemainingTiles.Count);
-            RemainingTiles.RemoveAt(randomIndex);
+            double currentPackingRatio = 1;
+            do
+            {
+                RemainingTiles.RemoveAt(random.Next(RemainingTiles.Count));
+                currentPackingRatio = (double)RemainingTiles.Sum(x => x.GetArea()) / Area;
+            }
+            while (currentPackingRatio > targetPackingRatio);
         }
     }
 }

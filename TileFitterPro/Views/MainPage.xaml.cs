@@ -110,8 +110,7 @@ namespace TileFitterPro.Views
 
         private void NumberOfRectanglesToGenerate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            if (Enum.TryParse(e.AddedItems.FirstOrDefault() as string, out RectangleDensity density))
+            if (e.AddedItems.FirstOrDefault() is RectangleDensity density)
             {
                 ViewModel.RectanglesToGenerateDensity = density;
             }

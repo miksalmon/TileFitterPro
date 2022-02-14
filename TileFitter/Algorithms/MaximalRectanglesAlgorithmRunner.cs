@@ -18,29 +18,6 @@ namespace TileFitter.Algorithms
             return ExecuteAllMaximalRectanglesHeuristicsAsync(container, cancellationToken);
         }
 
-        public async Task<Container> RunAllHeuristicsUntilFirstSuccessAsync(Container container, CancellationToken cancellationToken = default)
-        {
-            List<Task<Container>> runningTasks = RunAllHeuristicsAsync(container, cancellationToken);
-            Task<Container> completedTask;
-            Container resultContainer = null;
-            do
-            {
-                completedTask = await Task.WhenAny(runningTasks);
-                runningTasks.Remove(completedTask);
-                if(completedTask.IsCompletedSuccessfully)
-                {
-                    var result = await completedTask;
-                    if(result.IsValidSolution())
-                    {
-                        resultContainer = result;
-                        break;
-                    }
-                }
-            } while (runningTasks.Count > 0);
-
-            return resultContainer;
-        }
-
         public List<Task<Container>> ExecuteAllMaximalRectanglesHeuristicsAsync(Container container, CancellationToken cancellationToken = default)
         {
             var tasks = new List<Task<Container>>();

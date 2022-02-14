@@ -14,7 +14,5 @@ namespace TileFitter.Interfaces
         IEnumerable<IAlgorithmRunner> AlgorithmRunners { get; }
 
         Task<IEnumerable<Container>> FindAllSolutionsAsync(Container container, CancellationToken cancellationToken);
-
-        Task<Container> FindFastestSolutionAsync(Container container, CancellationToken cancellationToken);
     }
 }

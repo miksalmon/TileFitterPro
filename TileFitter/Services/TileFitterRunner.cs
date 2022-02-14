@@ -30,21 +30,5 @@ namespace TileFitter.Services
             
             return results.ToList().Where(c => c.IsValidSolution());
         }
-
-        public Task<Container> FindFastestSolutionAsync(Container container, CancellationToken cancellationToken)
-        {
-            var resultContainer = container.Clone();
-            var runningAlgorithms = new List<Task<Container>>();
-
-            foreach (var runner in AlgorithmRunners)
-            {
-                runningAlgorithms.AddRange(runner.RunAllHeuristicsAsync(resultContainer, cancellationToken));
-            }
-
-            //var results = await Task.WhenAll(runningAlgorithms);
-
-            //return results.ToList().Where(c => c.IsValidSolution());
-            return Task.FromResult<Container>(null);
-        }
     }
 }

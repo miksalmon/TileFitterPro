@@ -10,8 +10,6 @@ namespace TileFitter.Interfaces
 {
     public interface IAlgorithmRunner
     {
-        Task<Container> RunAllHeuristicsUntilFirstSuccessAsync(Container container, CancellationToken cancellationToken);
-
         List<Task<Container>> RunAllHeuristicsAsync(Container container, CancellationToken cancellationToken);
     }
 }
