@@ -79,7 +79,6 @@ The following sorting heuristics are implemented and used on tiles to place to f
 4. Perimeter descending with Width as a tie-breaker
 
 ## How to install
-
 In order for both the Console App and UWP app to work, you need to give them acces to your files. To do so, right click on the app icon and select *app settings* as such:
 ![App Settings](./docs/AppSettings.png)
 
@@ -87,7 +86,7 @@ Then, you need to enable broad file system access as such:
 ![Broad File System Access](./docs/BroadFileSystemAccess.png)
 
 ## How to use Console app
-To use the Console app, one must execute it using the following format: ```TileFitterProConsole --InputSet <inputFilePath> --ContainerWidth <width> --ContainerHeight <height> --Output <outputFilePath>
+To use the Console app, one must execute it using the following format: ```TileFitterProConsole --InputSet <inputFilePath> --ContainerWidth <width> --ContainerHeight <height> --Output <outputFilePath>``` where width and height are integers.
 
 Note that if a file already exists at the output file path, it will be replaced with the solution.
 

@@ -117,13 +117,31 @@ namespace TileFitterPro.ViewModels
                     TilesToPlace = (await tileReader.ReadTilesAsync(CurrentFile)).ToList();
                     Reset();
                 }
+                catch (ArgumentException)
+                {
+                    var dialog = new ContentDialog
+                    {
+                        Content = "Invalid input values.",
+                        CloseButtonText = "Close",
+                        DefaultButton = ContentDialogButton.Close,
+                        HorizontalContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                        VerticalContentAlignment = Windows.UI.Xaml.VerticalAlignment.Center
+                    };
+                    var task = dialog.ShowAsync();
+
+                    CurrentFile = null;
+                    TilesToPlace.Clear();
+                    Reset();
+                }
                 catch (Exception)
                 {
                     var dialog = new ContentDialog
                     {
                         Content = "File could not be read.",
                         CloseButtonText = "Close",
-                        DefaultButton = ContentDialogButton.Close
+                        DefaultButton = ContentDialogButton.Close,
+                        HorizontalContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                        VerticalContentAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                     };
                     var task = dialog.ShowAsync();
 

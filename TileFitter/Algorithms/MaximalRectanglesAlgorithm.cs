@@ -129,18 +129,25 @@ namespace TileFitter.Algorithms
 
         private MaximalRectanglesTilePlacement FindTilePlacement(Rectangle tile, Heuristic heuristic)
         {
-            switch (heuristic)
+            var bestFreeRectangle = Rectangle.Empty;
+            var bestPlacement = Rectangle.Empty;
+            var bestMetrics = new HeuristicMetrics(int.MaxValue, int.MaxValue);
+            foreach (var freeRectangle in FreeRectangles)
             {
-                case Heuristic.BottomLeftRule:
-                    return FindTilePlacementBottomLeftRule(tile);
-                case Heuristic.BestAreaFit:
-                    return FindTilePlacementBestAreaFit(tile);
-                case Heuristic.BestLongSideFit:
-                    return FindTilePlacementBestLongSideFit(tile);
-                case Heuristic.BestShortSideFit:
-                default:
-                    return FindTilePlacementBestShortSideFit(tile);
+                if (freeRectangle.CanContain(tile))
+                {
+                    var metrics = CalculateHeuristicMetrics(freeRectangle, tile, heuristic);
+
+                    if (metrics.IsBetter(bestMetrics))
+                    {
+                        bestFreeRectangle = freeRectangle;
+                        bestPlacement = new Rectangle(freeRectangle.X, freeRectangle.Y, tile.Width, tile.Height);
+                        bestMetrics = metrics;
+                    }
+                }
             }
+
+            return new MaximalRectanglesTilePlacement(tile, bestFreeRectangle, bestPlacement, bestMetrics);
         }
 
         #endregion
@@ -275,29 +282,22 @@ namespace TileFitter.Algorithms
         #endregion
 
         #region Heuristics
-        // TODO: merge FindTilePlacement* methods
 
-        private MaximalRectanglesTilePlacement FindTilePlacementBottomLeftRule(Rectangle tile)
+        private HeuristicMetrics CalculateHeuristicMetrics(Rectangle freeRectangle, Rectangle tile, Heuristic heuristic)
         {
-            var bestFreeRectangle = Rectangle.Empty;
-            var bestPlacement = Rectangle.Empty;
-            var bestMetrics = new HeuristicMetrics(int.MaxValue, int.MaxValue);
-            foreach (var freeRectangle in FreeRectangles)
+            switch(heuristic)
             {
-                if (freeRectangle.CanContain(tile))
-                {
-                    var metrics = CalculateBottomLeftRuleMetrics(freeRectangle, tile);
-
-                    if (metrics.IsBetter(bestMetrics))
-                    {
-                        bestFreeRectangle = freeRectangle;
-                        bestPlacement = new Rectangle(freeRectangle.X, freeRectangle.Y, tile.Width, tile.Height);
-                        bestMetrics = metrics;
-                    }
-                }
+                case Heuristic.BestShortSideFit:
+                    return CalculateBestShortSideFitMetrics(freeRectangle, tile);
+                case Heuristic.BestLongSideFit:
+                    return CalculateBestLongSideFitMetrics(freeRectangle, tile);
+                case Heuristic.BestAreaFit:
+                    return CalculateBestAreaFitMetrics(freeRectangle, tile);
+                case Heuristic.BottomLeftRule:
+                    return CalculateBottomLeftRuleMetrics(freeRectangle, tile);
+                default:
+                    throw new NotImplementedException();
             }
-
-            return new MaximalRectanglesTilePlacement(tile, bestFreeRectangle, bestPlacement, bestMetrics);
         }
 
         private HeuristicMetrics CalculateBottomLeftRuleMetrics(Rectangle freeRectangle, Rectangle tile)
@@ -310,29 +310,6 @@ namespace TileFitter.Algorithms
             var xScore = freeRectangle.X;
 
             return new HeuristicMetrics(yScore, xScore);
-        }
-
-        private MaximalRectanglesTilePlacement FindTilePlacementBestAreaFit(Rectangle tile)
-        {
-            var bestFreeRectangle = Rectangle.Empty;
-            var bestPlacement = Rectangle.Empty;
-            var bestMetrics = new HeuristicMetrics(int.MaxValue, int.MaxValue);
-            foreach (var freeRectangle in FreeRectangles)
-            {
-                if (freeRectangle.CanContain(tile))
-                {
-                    var metrics = CalculateBestAreaFitMetrics(freeRectangle, tile);
-
-                    if (metrics.IsBetter(bestMetrics))
-                    {
-                        bestFreeRectangle = freeRectangle;
-                        bestPlacement = new Rectangle(freeRectangle.X, freeRectangle.Y, tile.Width, tile.Height);
-                        bestMetrics = metrics;
-                    }
-                }
-            }
-
-            return new MaximalRectanglesTilePlacement(tile, bestFreeRectangle, bestPlacement, bestMetrics);
         }
 
         private HeuristicMetrics CalculateBestAreaFitMetrics(Rectangle freeRectangle, Rectangle tile)
@@ -348,29 +325,6 @@ namespace TileFitter.Algorithms
             return new HeuristicMetrics(areaScore, shortSideScore);
         }
 
-        private MaximalRectanglesTilePlacement FindTilePlacementBestLongSideFit(Rectangle tile)
-        {
-            var bestFreeRectangle = Rectangle.Empty;
-            var bestPlacement = Rectangle.Empty;
-            var bestMetrics = new HeuristicMetrics(int.MaxValue, int.MaxValue);
-            foreach (var freeRectangle in FreeRectangles)
-            {
-                if (freeRectangle.CanContain(tile))
-                {
-                    var metrics = CalculateBestLongSideFitMetrics(freeRectangle, tile);
-
-                    if (metrics.IsBetter(bestMetrics))
-                    {
-                        bestFreeRectangle = freeRectangle;
-                        bestPlacement = new Rectangle(freeRectangle.X, freeRectangle.Y, tile.Width, tile.Height);
-                        bestMetrics = metrics;
-                    }
-                }
-            }
-
-            return new MaximalRectanglesTilePlacement(tile, bestFreeRectangle, bestPlacement, bestMetrics);
-        }
-
         private HeuristicMetrics CalculateBestLongSideFitMetrics(Rectangle freeRectangle, Rectangle tile)
         {
             var widthDiff = freeRectangle.Width - tile.Width;
@@ -379,29 +333,6 @@ namespace TileFitter.Algorithms
             var longSideDiff = Math.Max(widthDiff, heightDiff);
 
             return new HeuristicMetrics(longSideDiff, shortSideDiff);
-        }
-
-        private MaximalRectanglesTilePlacement FindTilePlacementBestShortSideFit(Rectangle tile)
-        {
-            var bestFreeRectangle = Rectangle.Empty;
-            var bestPlacement = Rectangle.Empty;
-            var bestMetrics = new HeuristicMetrics(int.MaxValue, int.MaxValue);
-            foreach (var freeRectangle in FreeRectangles)
-            {
-                if (freeRectangle.CanContain(tile))
-                {
-                    var metrics = CalculateBestShortSideFitMetrics(freeRectangle, tile);
-
-                    if (metrics.IsBetter(bestMetrics))
-                    {
-                        bestFreeRectangle = freeRectangle;
-                        bestPlacement = new Rectangle(freeRectangle.X, freeRectangle.Y, tile.Width, tile.Height);
-                        bestMetrics = metrics;
-                    }
-                }
-            }
-
-            return new MaximalRectanglesTilePlacement(tile, bestFreeRectangle, bestPlacement, bestMetrics);
         }
 
         private HeuristicMetrics CalculateBestShortSideFitMetrics(Rectangle freeRectangle, Rectangle tile)

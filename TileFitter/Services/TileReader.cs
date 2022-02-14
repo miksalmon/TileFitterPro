@@ -31,6 +31,12 @@ namespace TileFitter.Services
                     Width = int.Parse(data[0]),
                     Height = int.Parse(data[1])
                 };
+
+                if(tile.Width < 0 || tile.Height < 0)
+                {
+                    throw new ArgumentException("Invalid input values.");
+                }
+
                 tiles.Add(tile);
             }
 
