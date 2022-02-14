@@ -11,6 +11,7 @@ using Windows.Storage;
 
 namespace TileFitter.Services
 {
+    /// <inheritdoc cref="ITileReader"/>
     public class TileReader : ITileReader
     {
         public async Task<IEnumerable<Rectangle>> ReadTilesAsync(StorageFile file)

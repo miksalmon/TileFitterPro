@@ -7,6 +7,7 @@ using TileFitter.Models;
 
 namespace TileFitter.Services
 {
+    /// <inheritdoc cref="ITileFitterRunner"/>
     public class TileFitterRunner : ITileFitterRunner
     {
         public IEnumerable<IAlgorithmRunner> AlgorithmRunners { get; }

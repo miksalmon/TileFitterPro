@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TileFitter.Models
 {
+    /// <summary>
+    /// Model of heuristic metrics containing a primary metric, secondary metric and a way of comparing metrics.
+    /// </summary>
     internal class HeuristicMetrics
     {
         public HeuristicMetrics(int primaryMetric, int secondaryMetric)

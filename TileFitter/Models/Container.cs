@@ -6,6 +6,9 @@ using TileFitter.Extensions;
 
 namespace TileFitter.Models
 {
+    /// <summary>
+    /// Model class of a container representing the problem and solution of a tile fitting problem.
+    /// </summary>
     public class Container
     {
         public Container(int width, int height, List<Rectangle> tiles)

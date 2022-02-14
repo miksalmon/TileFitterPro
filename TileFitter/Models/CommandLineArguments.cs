@@ -2,6 +2,9 @@
 
 namespace TileFitter.Models
 {
+    /// <summary>
+    /// Command line arguments of TileFitterPro and TileFitterProConsole.
+    /// </summary>
     public class CommandLineArguments
     {
         [Option('I', "InputSet", Required = true, HelpText = "Set input set file path.")]

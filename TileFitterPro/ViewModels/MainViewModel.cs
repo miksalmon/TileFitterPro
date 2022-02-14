@@ -26,7 +26,7 @@ namespace TileFitterPro.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        private double PACKING_RATIO = 0.9;
+        private double PACKING_RATIO = 0.95;
         private const int MAX_RGB = 200;
         private Random random = new Random();
 

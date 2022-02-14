@@ -121,7 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Algorithms\MaximalRectanglesAlgorithmRunner.cs" />
-    <Compile Include="Algorithms\MaximalRectanglesTileFitter.cs" />
+    <Compile Include="Algorithms\MaximalRectanglesAlgorithm.cs" />
     <Compile Include="Comparers\RectangleAreaComparer.cs" />
     <Compile Include="Comparers\RectanglePerimeterComparer.cs" />
     <Compile Include="Comparers\RectangleHeightComparer.cs" />
@@ -134,9 +134,7 @@
     <Compile Include="Models\CommandLineArguments.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\HeuristicMetrics.cs" />
-    <Compile Include="Models\Input.cs" />
-    <Compile Include="Models\TileFitterOptions.cs" />
-    <Compile Include="Models\TilePlacement.cs" />
+    <Compile Include="Models\MaximalRectanglesTilePlacement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContainerWriter.cs" />
     <Compile Include="Services\TileFitterRunner.cs" />

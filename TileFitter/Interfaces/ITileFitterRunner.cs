@@ -9,6 +9,9 @@ using TileFitter.Models;
 
 namespace TileFitter.Interfaces
 {
+    /// <summary>
+    /// Interface of a tile fitter runner defining the behavior of executing all algorithms and getting their solution(s).
+    /// </summary>
     internal interface ITileFitterRunner
     {
         IEnumerable<IAlgorithmRunner> AlgorithmRunners { get; }

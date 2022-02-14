@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace TileFitter.Models
 {
-    internal class TilePlacement
+    /// <summary>
+    /// Model of a tile placement and all relevant data used in the Maximal Rectangles algorithm.
+    /// </summary>
+    internal class MaximalRectanglesTilePlacement
     {
         public Rectangle InitialTile { get; }
 
@@ -17,7 +20,7 @@ namespace TileFitter.Models
 
         public HeuristicMetrics Metrics { get; }
 
-        public TilePlacement(Rectangle initialTile, Rectangle freeTile, Rectangle placedTile, HeuristicMetrics metrics)
+        public MaximalRectanglesTilePlacement(Rectangle initialTile, Rectangle freeTile, Rectangle placedTile, HeuristicMetrics metrics)
         {
             InitialTile = initialTile;
             FreeRectangle = freeTile;

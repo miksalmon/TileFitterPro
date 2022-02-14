@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TileFitter.Extensions
 {
+    /// <summary>
+    /// Rectangle extensions for rectangle manipulations or calculations
+    /// </summary>
     public static class RectangleExtensions
     {
         public static int GetArea(this Rectangle rectangle)

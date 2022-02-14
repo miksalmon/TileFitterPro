@@ -9,6 +9,9 @@ using TileFitter.Models;
 
 namespace TileFitter.Comparers
 {
+    /// <summary>
+    /// Comparer for sorting rectangles by descending order of perimeter, followed by width for tie-breaking
+    /// </summary>
     internal class RectanglePerimeterComparer : Comparer<Rectangle>
     {
         public override int Compare(Rectangle x, Rectangle y)

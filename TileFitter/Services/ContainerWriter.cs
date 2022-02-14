@@ -7,6 +7,7 @@ using Windows.Storage;
 
 namespace TileFitter.Services
 {
+    /// <inheritdoc cref="IContainerWriter"/>
     public class ContainerWriter : IContainerWriter
     {
         public async Task WriteOutput(string filePath, Container container)

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TileFitter.Comparers
 {
+    /// <summary>
+    /// Comparer for sorting rectangles by descending order of width, followed by height for tie-breaking
+    /// </summary>
     internal class RectangleWidthComparer : Comparer<Rectangle>
     {
         public override int Compare(Rectangle x, Rectangle y)

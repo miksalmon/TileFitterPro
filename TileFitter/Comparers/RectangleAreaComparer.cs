@@ -4,6 +4,9 @@ using TileFitter.Extensions;
 
 namespace TileFitter.Comparers
 {
+    /// <summary>
+    /// Comparer for sorting rectangles by descending order of area, followed by width for tie-breaking
+    /// </summary>
     internal class RectangleAreaComparer : Comparer<Rectangle>
     {
         public override int Compare(Rectangle x, Rectangle y)
