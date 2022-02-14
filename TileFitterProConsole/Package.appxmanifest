@@ -11,8 +11,8 @@
   IgnorableNamespaces="uap mp uap5 iot2 desktop4 rescap">
 
   <Identity
-    Name="bdfcd6a1-62e6-4685-8167-ecc1e8b590a9"
-    Publisher="CN=misalmo"
+    Name="TileFitterProConsole"
+    Publisher="CN=miksalmon"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="bdfcd6a1-62e6-4685-8167-ecc1e8b590a9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
