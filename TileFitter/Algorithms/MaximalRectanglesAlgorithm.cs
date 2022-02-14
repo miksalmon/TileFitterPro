@@ -198,7 +198,7 @@ namespace TileFitter.Algorithms
 
         private void RemoveRedundantFreeRectangles()
         {
-            /// Go through each pair and remove any rectangle that is redundant.
+            // Remove any rectangle contained in another one
             for (int i = 0; i < FreeRectangles.Count; ++i)
             {
                 var freeRectangle = FreeRectangles[i];
