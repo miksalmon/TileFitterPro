@@ -206,6 +206,11 @@ namespace TileFitterPro.ViewModels
             return true;
         }
 
+        public bool CanExportCommand(Container container)
+        {
+            return container.PlacedTiles.Any() && !container.RemainingTiles.Any();
+        }
+
         private void BuildTilesToDisplay(List<Rectangle> tilesToDisplay)
         {
             Reset();
