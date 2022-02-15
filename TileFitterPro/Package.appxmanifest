@@ -12,7 +12,7 @@
   <Identity
     Name="TilefitterPro"
     Publisher="CN=miksalmon"
-    Version="1.0.1.0" />
+    Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="2990018D-6279-4280-A5C4-7000985F6935" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

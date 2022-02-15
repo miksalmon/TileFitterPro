@@ -85,7 +85,7 @@ The following sorting heuristics are implemented and used on tiles to place to f
 4. Perimeter descending with Width as a tiebreaker
 
 ## How to install
-To install both the Console and UWP apps, navigate to their respective folders (TileFitterPro/TileFitterPro(Console)/AppPackages), and using an elevated powershell command line, execute the ```install.ps1``` scripts to install the app.
+To install both the Console and UWP apps, navigate to their respective folders (TileFitterPro/TileFitterPro(Console)/AppPackages/TileFitterPro(Console)_1.0.0.0_Test), and using an elevated powershell command line, execute the ```install.ps1``` scripts to install the app.
 
 Then, for both the Console App and UWP app to work, you need to give them access to your files. To do so, right click on the app icon and select *app settings* as such:
 
